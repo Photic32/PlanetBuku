@@ -5,7 +5,7 @@ Aplikasi untuk melihat informasi buku dan melakukan peminjaman buku secara onlin
 Daftar Modul	:
  - Daftar peminjam buku (Admin)
 Pada modul ini admin dapat melihat daftar dari para peminjam buku dan mengedit detail peminjam buku seperti mengcancel peminjaman yang dilakukan oleh peminjam buku.
-- Edit informasi buk u (Admin)
+- Edit informasi buku (Admin)
 Admin dapat mengubah detail dari buku, seperti menambah atau mengurangi stok buku, mengubah properti dari buku, dan menambah buku baru atau menghapus buku.
 - Lihat deskripsi buku (User)
 User dapat mencari dan melihat detail dari informasi buku dan melakukan peminjaman, user juga dapat melihat review dan memberikan review pada buku tersebut.
