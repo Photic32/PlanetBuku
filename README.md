@@ -9,7 +9,7 @@ Pada modul ini admin dapat melihat daftar dari para peminjam buku dan mengedit d
 Admin dapat mengubah detail dari buku, seperti menambah atau mengurangi stok buku, mengubah properti dari buku, dan menambah buku baru atau menghapus buku.
 - Lihat deskripsi buku (User)
 User dapat mencari dan melihat detail dari informasi buku dan melakukan peminjaman, user juga dapat melihat review dan memberikan review pada buku tersebut.
-- Register/Login + Homepage (User)
+- Homepage (User)
 User dapat mendaftarkan akun baru atau login dengan akun yang sudah ada. Pada homepage, user dapat melihat waktu terdekat dari deadline pengembalian buku yang ada. User juga dapat membuka keranjang dari buku yang belum finalisasi peminjaman dan mengedit detail peminjaman pada keranjang.
 - Daftar buku yang sedang atau sudah dipinjam (User)
 User dapat melihat daftar buku yang sedang dipinjam atau sudah dipinjam. User juga dapat memberikan review buku atau memperpendek durasi peminjaman buku yang sedang dipinjam.
