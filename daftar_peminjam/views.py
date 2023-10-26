@@ -50,6 +50,7 @@ def serialize_peminjam_individu(peminjam):
     }
     return json.dumps(temp)
 
+#tes git merge
 def get_user_json(request, id):
     user = Peminjam.objects.get(pk=id)
     return HttpResponse(serialize_peminjam_individu(user))
