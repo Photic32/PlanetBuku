@@ -40,7 +40,7 @@ def serialize_peminjam_individu(peminjam):
             "stock": book.stock
         }
         buku_pinjam.append(temp2)
-        
+    #tes git
     temp = {
         'username' : peminjam.user.username,
         'jumlah_buku_dipinjam' : peminjam.jumlah_buku_dipinjam,
