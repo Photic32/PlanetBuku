@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daftar Buku Dipinjam dan Dikembalikan</title>
+</head>
+<body>
+    <h1>Daftar Buku Dipinjam</h1>
+    <ul>
+        {% for peminjaman in peminjaman_dipinjam %}
+            <li>{{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})</li>
+        {% empty %}
+            <li>Tidak ada buku yang sedang dipinjam.</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Daftar Buku Dikembalikan</h1>
+    <ul>
+        {% for peminjaman in peminjaman_dikembalikan %}
+            <li>{{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})</li>
+        {% empty %}
+            <li>Tidak ada buku yang sudah dikembalikan.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
