@@ -1,0 +1,63 @@
+[
+    {
+      "model": "auth.user",
+      "pk": 1,
+      "fields": {
+        "username": "john_doe",
+        "email": "john_doe@example.com",
+        "password": "pbkdf2_sha256$150000$vlXUvaEMJv2b$QAKX4F1X7aWGl4iPr2PbPwNLiHpkZe/ktvWDby7MKx4="
+      }
+    },
+    {
+      "model": "daftar_peminjam.Peminjaman",
+      "pk": 1,
+      "fields": {
+        "pengguna": 1,
+        "tanggal_peminjaman": "2023-10-26",
+        "tanggal_pengembalian": "2023-10-29",
+        "buku": 1,
+        "status": "dipinjam"
+      }
+    },
+    {
+      "model": "daftar_peminjam.Peminjam",
+      "pk": 1,
+      "fields": {
+        "user": 1,
+        "book_list": [1],
+        "pengembalian_paling_awal": "2023-10-29",
+        "jumlah_buku_dipinjam": 1
+      }
+    },
+    {
+      "model": "auth.user",
+      "pk": 2,
+      "fields": {
+        "username": "jane_smith",
+        "email": "jane_smith@example.com",
+        "password": "pbkdf2_sha256$150000$WlmOdVY1s0zK$NhTz8sw0H4Fd3QiNTg6MztWngQNVbOFy91X3RYbC3fE="
+      }
+    },
+    {
+      "model": "daftar_peminjam.Peminjaman",
+      "pk": 2,
+      "fields": {
+        "pengguna": 2,
+        "tanggal_peminjaman": "2023-10-25",
+        "tanggal_pengembalian": "2023-11-01",
+        "buku": 2,
+        "status": "dikembalikan"
+      }
+    },
+    {
+      "model": "daftar_peminjam.Peminjam",
+      "pk": 2,
+      "fields": {
+        "user": 2,
+        "book_list": [1, 2],
+        "pengembalian_paling_awal": "2023-11-01",
+        "jumlah_buku_dipinjam": 2
+      }
+    }
+]
+    
