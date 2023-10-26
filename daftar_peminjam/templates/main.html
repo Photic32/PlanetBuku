@@ -5,6 +5,10 @@
 
 {% include 'header.html' %}
 
+<style>
+    
+</style>
+
 <!--  bagian atas -->
 <div class="container p-5">
     <h1 class="text-center">
@@ -19,7 +23,28 @@
 </table>
 </div>
 
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Open Modal
+  </button>
 
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          This is the content of the modal.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script>
     function updateDisplay(){
@@ -44,18 +69,99 @@
                 isiTable += "<td>" + user.jumlah_buku_dipinjam + "</td>";
                 isiTable += "<td>" + user.pengembalian_paling_awal + "</td>";
                 isiTable += "<td>" + user.denda + "</td>";
-                isiTable += "<td>" + "<button>lol</button>" + "</td>";
+                isiTable += "<td>" + 
+                    "<button class='btn btn-primary' onclick='editData("+ i +")'>Edit Data</button>" + 
+                    "<button class='btn btn-success' onclick='showData("+ i +")'>Lihat Buku Dipinjam</button>" +
+                    "</td>";
                 isiTable += "</tr>"
                 i++;
             });
             document.getElementById("tabel-user").innerHTML = isiTable;
-            console.log(isiTable);
+            
         }
        );
     }
     updateDisplay();
 
+    function editData(id){
+        const baseUrl = "{% url 'daftar_peminjam:get_user_json' id=0 %}";
+        const url = baseUrl.replace('0', id);
+        fetch(url).then(
+            response => response.json()
+        ).then(
+            data => {
+                $("#exampleModal").find(".modal-title").text("Edit Data User : " + data.username);
+                $("#exampleModal").find(".modal-title").css("color", "green");
+                $("#exampleModal").find(".modal-body").html(
+                    `<form  method="POST">
+                        {% csrf_token %}
+                        //kurang action cok
+                        <input type="hidden" name="id" value="` + data.id + `">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" id="username" value="` + data.username + `">
+                        </div>
+                        <div class="mb-3">
+                            <label for="jumlah_buku_dipinjam" class="form-label">Jumlah Buku Dipinjam</label>
+                            <input type="number" name="jumlah_buku_dipinjam" class="form-control" id="jumlah_buku_dipinjam" value="` + data.jumlah_buku_dipinjam + `">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pengembalian_paling_awal" class="form-label">Tanggal Kembali Paling Awal</label>
+                            <input type="date" name="pengembalian_paling_awal" class="form-control" id="pengembalian_paling_awal" value="` + data.pengembalian_paling_awal + `">
+                        </div>
+                        <div class="mb-3">
+                            <label for="denda" class="form-label">Denda</label>
+                            <input type="number" name="denda" class="form-control" id="denda" value="` + data.denda + `">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>`)
+                console.log(data);
+            }
+        );
+        var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        modal.show();
+    }
 
+    function showData(id){
+        const baseUrl = "{% url 'daftar_peminjam:get_user_json' id=0 %}";
+        const url = baseUrl.replace('0', id);
+        fetch(url).then(
+            response => response.json()
+        ).then(
+            data => {
+                $("#exampleModal").find(".modal-title").text("Data User : " + data.username);
+                $("#exampleModal").find(".modal-title").css("color", "green");
+                data.buku_dipinjam.forEach(function(buku){
+                    
+                });
+                $("#exampleModal").find(".modal-body").html(
+                    `<form  method="POST">
+                        {% csrf_token %}
+                        //kurang action cok
+                        <input type="hidden" name="id" value="` + data.id + `">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" id="username" value="` + data.username + `" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jumlah_buku_dipinjam" class="form-label">Jumlah Buku Dipinjam</label>
+                            <input type="number" name="jumlah_buku_dipinjam" class="form-control" id="jumlah_buku_dipinjam" value="` + data.jumlah_buku_dipinjam + `" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pengembalian_paling_awal" class="form-label">Tanggal Kembali Paling Awal</label>
+                            <input type="date" name="pengembalian_paling_awal" class="form-control" id="pengembalian_paling_awal" value="` + data.pengembalian_paling_awal + `" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="denda" class="form-label">Denda</label>
+                            <input type="number" name="denda" class="form-control" id="denda" value="` + data.denda + `" readonly>
+                        </div>
+                    </form>`)
+                console.log(data);
+            }
+        );
+        var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        modal.show();
+    }
 
 </script>
 
