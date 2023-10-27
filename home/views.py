@@ -28,23 +28,26 @@ def get_keranjang_json(request):
     keranjangs = Keranjang.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', keranjangs))
 
-@login_required(login_url='/register')
+
 def show_home(request):
-    user = request.user
-    if user.is_staff == True:
-        context = {
-            'last_login': request.COOKIES['last_login'],
-            'username' : user.username,
-        }
+    if request.user.is_authenticated:
+        user = request.user
+        if user.is_staff == True:
+            context = {
+                'last_login': request.COOKIES['last_login'],
+                'username' : user.username,
+            }
 
-        return render(request, "homeAdmin.html", context)
+            return render(request, "homeAdmin.html", context)
+        else:
+            context = {
+                'last_login': request.COOKIES['last_login'],
+                'username' : user.username,
+            }
+
+            return render(request, "homeUser.html", context)
     else:
-        context = {
-            'last_login': request.COOKIES['last_login'],
-            'username' : user.username,
-        }
-
-        return render(request, "homeUser.html", context)
+        return render(request,"homeGuest.html")
 
 
 def register(request):
