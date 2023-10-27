@@ -62,35 +62,40 @@
 
 <div class="container">
     <div class="d-flex align-items-center">
-         <div class="user-rating d-inline">
+        <div class="user-rating d-inline">
             <h2 class="d-inline">User Rating</h2>
         </div>
         <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal">Rate this book</button>
-        <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Give your review</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="user-reviews">
+        <div id="user-reviews-card" class="card-container">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Give your review</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="review" class="col-form-label">Review:</label>
+                        <textarea type="text" class="form-control" id="review" name="review" rows="8"></textarea>
                     </div>
-                    <div class="modal-body">
-                        <form id="form" onsubmit="return false;">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="review" class="col-form-label">Review:</label>
-                                <textarea type="text" class="form-control" id="review" name="review"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="price" class="col-form-label">Rate:</label>
-                                <input type="number" class="form-control" id="rate" name="rate"></input>
-                            </div>
-                        </form>
+                    <div class="mb-3">
+                        <label for="price" class="col-form-label">Rate:</label>
+                        <input type="number" class="form-control" id="rate" name="rate"></input>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="button_give-review" data-bs-dismiss="modal">Give Review</button>
-                    </div>
-                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_give-review" data-bs-dismiss="modal">Give Review</button>
             </div>
         </div>
     </div>
