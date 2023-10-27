@@ -186,7 +186,7 @@ https://templatemo.com/tm-579-cyborg-gaming
           keranjangString += `
             <div class="item">
               <ul>
-                <li><img src="${peminjamans[i].fields.buku.fields.image_l}" alt="" style="width: 80px; height: 80px; object-fit: cover; object-position: 25% 25%;" class="templatemo-item"></li>
+                <li><img src="${keranjang.fields.book_list.all()[i].all.fields.image_l}" alt="" style="width: 80px; height: 80px; object-fit: cover; object-position: 25% 25%;" class="templatemo-item"></li>
                 <li><h4>${peminjamans[i].fields.buku.fields.title}</h4><span>${peminjamans[i].fields.buku.fields.author}</span></li>
                 <li><h4>Date Added</h4><span>${peminjamans[i].fields.tanggal_peminjaman}</span></li>
                 <li><h4>Return Date</h4><span>${peminjamans[i].fields.tanggal_pengembalian}</span></li>

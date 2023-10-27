@@ -26,7 +26,7 @@ class Review(models.Model): # App 3
 
 class Keranjang(models.Model): # App 4
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    book_list = models.ManyToManyField(Book)
+    book_list = models.ManyToManyField(Book, blank=True)
     jumlah_buku = models.IntegerField(default=0)
     
 class Peminjaman(models.Model): # App 5
