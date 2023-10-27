@@ -1,4 +1,12 @@
 from django.db import models
 from book.models import Book
-# Create your models here.
+from django.core.validators import MaxValueValidator, MinValueValidator
 
+class Review(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.TextField()
+    rate = models.IntegerField(
+        validators=[MaxValueValidator(10), MinValueValidator(0)]
+    )
+    review_date = models.DateField(auto_now_add=True)
