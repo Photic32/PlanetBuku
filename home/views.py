@@ -57,7 +57,9 @@ def register(request):
         if request.POST.get("submitButton") =="Register":
             form = UserCreationForm(request.POST)
             if form.is_valid():
-                form.save()
+                user = form.save()
+                newKeranjang = Keranjang(user=user)
+                newKeranjang.save()
                 messages.success(request, 'Your account has been successfully created!')
                 return redirect('home:register')
             else:
