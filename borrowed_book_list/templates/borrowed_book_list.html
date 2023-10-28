@@ -45,8 +45,8 @@
         <ul>
             {% for peminjaman in peminjaman_dipinjam %}
                 <li class="card">
-                    {{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})
-                    <a href="{% url 'borrowed_book_list:return_book/book_id'%}" class="btn btn-link">Kembalikan Buku</a>
+                    {{ peminjaman.buku.pk }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})
+                    <a href="{% url 'borrowed_book_list:return_book' book_id=peminjaman.pk %}"class="btn btn-link">Kembalikan buku</a>
                 </li>
             {% empty %}
                 <li class="card">Tidak ada buku yang sedang dipinjam.</li>
@@ -58,14 +58,17 @@
     <div class="card-container">
         <ul>
             {% for peminjaman in peminjaman_dikembalikan %}
-                <li id= "kembalikan" class="card">{{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Kesan</button>
-                </li>
+                <div id= "kembalikan" class="card">
+                    <img src ="{{ peminjaman.buku.image_m }}">
+                    <li>{{ peminjaman.buku }}</li>
+                    {{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})
+                    <button type="button" onclick="showModal('{{ peminjaman.buku.pk }}')" class="btn btn-primary" >Kesan</button>
+                    <div class="ajax_card"></div>
+                </div>
             {% empty %}
                 <li class="card">Tidak ada buku yang sudah dikembalikan.
                 </li>
             {% endfor %}
-            <div id="ajax_cards" ></div>
         </ul>
 
     </div>
@@ -87,11 +90,13 @@
                         <div class="mb-3">
                             <label for="kesan" class="col-form-label">Kesan:</label>
                             <textarea class="form-control" id="kesan" name="kesan"></textarea>
+                            <input type="hidden" id="input-hidden" name="book_id"></input>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- <button type="button" onclick="showModal('{{ peminjam.pk }}')" class="btn btn-primary" >Tambahkan kesan</button> -->
                     <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Tambahkan kesan</button>
                 </div>
             </div>
@@ -122,9 +127,17 @@
         }
     
         refreshKesan();
-    
+
+        function showModal(id) {
+            let modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+            modal.show();
+            document.getElementById("form").reset();
+            document.getElementById("input-hidden").value = id;
+        }
+
         function addKesan() {
-            fetch("{% url 'borrowed_book_list:add_kesan_ajax' %}", {
+            const bookId = document.getElementById("input-hidden").value;
+            fetch("{% url 'borrowed_book_list:add_kesan_ajax'  %}", {
                 method: "POST",
                 body: new FormData(document.querySelector('#form'))
             }).then(refreshKesan)
