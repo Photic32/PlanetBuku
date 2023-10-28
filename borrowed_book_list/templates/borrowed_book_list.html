@@ -46,10 +46,7 @@
             {% for peminjaman in peminjaman_dipinjam %}
                 <li class="card">
                     {{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})
-                    <form method="post" action="{% url 'return_book' book.id %}">
-                        {% csrf_token %}
-                        <button type="submit">kembalikan buku</button>
-                    </form>
+                    <a href="{% url 'borrowed_book_list:return_book/book_id'%}" class="btn btn-link">Kembalikan Buku</a>
                 </li>
             {% empty %}
                 <li class="card">Tidak ada buku yang sedang dipinjam.</li>
@@ -101,30 +98,34 @@
 
     <script>
         async function getKesan() {
-            return fetch("{% url 'borrowed_book_list:get_kesan_json' %}").then((res) => res.json())
+            return fetch("{% url 'borrowed_book_list:get_kesan_json' %}").then((res) => res.json());
         }
-        async function refreshProducts() { 
-            document.getElementById("kesan").innerHTML = ""
-            const kesan = await getKesan()
+        async function refreshKesan() { 
+            const kesanContainer = document.getElementById("kesan");
+            kesanContainer.innerHTML = "";
+            // document.getElementById("kesan").innerHTML = ""
+            const kesan = await getKesan();
             let htmlString = `<tr>
                 <th>Kesan</th>
             </tr>`
             kesan.forEach((item) => {
-                htmlString += `\n<tr>
-                <td>${item.fields.kesan}</td>
-            </tr>` 
-            })
+                htmlString += `
+                <tr>
+                    <td>${item.fields.kesan}</td>
+                </tr>`;
+        });
             
-            document.getElementById("kembalikan").innerHTML = htmlString
+            // document.getElementById("kembalikan").innerHTML = htmlString
+            kesanContainer.innerHTML = htmlString;
         }
     
-        refreshProducts()
+        refreshKesan();
     
         function addKesan() {
             fetch("{% url 'borrowed_book_list:add_kesan_ajax' %}", {
                 method: "POST",
                 body: new FormData(document.querySelector('#form'))
-            }).then(refreshProducts)
+            }).then(refreshKesan)
     
             document.getElementById("form").reset()
             return false

@@ -46,7 +46,8 @@ def add_kesan_ajax(request):
     return HttpResponseNotFound()
 
 def get_kesan_json(request):
-    kesan_peminjam = KesanPeminjam.objects.filter(book=request.book)
+    book = get_object_or_404(Book, pk=id)
+    kesan_peminjam = KesanPeminjam.objects.filter(book=book)
     return HttpResponse(serializers.serialize('json', kesan_peminjam))
     
 # Create your views here.
