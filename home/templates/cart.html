@@ -64,8 +64,8 @@ https://templatemo.com/tm-579-cyborg-gaming
                     <!-- ***** Search End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                        <li><a href="index.html" >Home</a></li>
-                        <li><a href="browse.html">Browse</a></li>
+                        <li><a href="{% url 'home:show_home' %}" >Home</a></li>
+                        <li><a href="{% url 'view_book:view_books' %}">Browse</a></li>
                         <li><a href="{% url 'home:show_keranjang' %}" class="active">Cart</a></li>
                         <li><a href="streams.html">Borrowed</a></li>
                         <li><a href="{% url 'home:logout' %}">Logout</a></li>
@@ -126,7 +126,7 @@ https://templatemo.com/tm-579-cyborg-gaming
             </div>
             <div class="col-lg-12">
               <div class="main-button">
-                <a href="profile.html">Return To Home</a>
+                <a href="{% url 'home:show_home' %}">Return To Home</a>
               </div>
             </div>
           </div>

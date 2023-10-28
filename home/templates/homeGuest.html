@@ -64,8 +64,8 @@ https://templatemo.com/tm-579-cyborg-gaming
                     <!-- ***** Search End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                        <li><a href="index.html" class="active">Home</a></li>
-                        <li><a href="browse.html">Browse</a></li>
+                        <li><a href="{% url 'home:show_home' %}" class="active">Home</a></li>
+                        <li><a href="{% url 'view_book:view_books' %}">Browse</a></li>
                         <li><a href="{% url 'home:register' %}">Login/Register</a></li>
                         <li><a href="">Guest <img src="{% static 'images/profile-header.jpg' %}" alt=""></a></li>
                     </ul>   
