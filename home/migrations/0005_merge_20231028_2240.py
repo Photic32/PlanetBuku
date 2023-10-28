@@ -5,7 +5,6 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("home", "0004_alter_keranjang_book_list_alter_peminjam_book_list_and_more"),
         ("home", "0004_delete_review"),
     ]
 

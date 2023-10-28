@@ -5,7 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import datetime
 from django.db import models
 from django.contrib.auth.models import User, UserManager, AbstractBaseUser, PermissionsMixin, AbstractUser, BaseUserManager
-from view_book.models import Review
+#from view_book.models import Review
 
 class Book(models.Model): # App 2
     isbn = models.TextField(null=True, blank=True)
