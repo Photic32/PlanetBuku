@@ -5,7 +5,6 @@
 .desc-list-item dt{
     float: left;
     width: 50%;
-    /* adjust the width; make sure the total of both is 100% */
     padding: 0;
     margin: 0;
     display: table-row;
@@ -14,7 +13,6 @@
 .desc-list-item dd{
     float: left;
     width: 50%;
-    /* adjust the width; make sure the total of both is 100% */
     padding: 0;
     margin: 0;
     display: table-row;
@@ -28,14 +26,39 @@
     display: table;
 }
 
+.review-card {
+    width: 100%;
+    max-width: 215px;
+    border: 1px solid #73beb0;
+    padding: 10px;
+    box-shadow: 2px 2px 5px rgba(207, 165, 196, 0.2);
+    border-radius: 5px;
+    background-color: #fff;
+    margin: 10px 5px 10px 0px;
+    word-wrap: break-word;
+}
+
 </style>
 {% include 'header.html' %}
+{% if user.is_authenticated %}
+    <div id="auth-status" data-authenticated="true" style="display: none;"></div>
+{% else %}
+    <div id="auth-status" data-authenticated="false" style="display: none;"></div>
+{% endif %}
+
+<div class="back-button">
+    <button type="button" onclick="history.back()" class="btn btn-link" id="back-button">← back</button>
+</div>
+<div class="d-flex justify-content-center">
+    <div id="success-alert" class="alert" style="display: none;"></div>
+</div>
+</div>
 <div class="container">
     <div class="book-item row mb-5">
-        <div class="book-image d-flex justify-content-center col-sm-2">
+        <div class="book-image d-flex justify-content-center col-sm-2 mx-auto">
             <img src="{{ book.image_l }}" class="img-fluid" alt="{{ book.title }}">
         </div>
-        <div class="book-details col-sm-8">
+        <div class="book-details col-sm-6 mx-auto">
             <h1 class="mb-0">{{ book.title }}</h1>
             <h5 class="text-muted">{{ book.author }}</h5>
             <dl class="desc-list">
@@ -57,6 +80,9 @@
                 </div>
             </dl>
         </div>
+        <div class="col-sm-2 mx-auto">
+            <button type="button" class="btn btn-primary" id="add-to-cart">Add to cart</button>
+        </div>
     </div>
 </div>
 
@@ -65,9 +91,13 @@
         <div class="user-rating d-inline">
             <h2 class="d-inline">User Rating</h2>
         </div>
-        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal">Rate this book</button>
+        {% if request.user.is_authenticated %}
+            {% if not has_reviewed %}
+                <button type="button" class="btn btn-outline-primary btn-sm" id="review-button" data-bs-toggle="modal" data-bs-target="#reviewModal" data-has-reviewed="{{ has_reviewed }}">Rate this book</button>
+            {% endif %}
+        {% endif %}
     </div>
-    <div class="user-reviews">
+    <div class="user-reviews" data-book-id="{{ book.pk }}">
         <div id="user-reviews-card" class="card-container">
         </div>
     </div>
@@ -77,25 +107,53 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Give your review</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Write your review</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="form" onsubmit="return false;">
+                <form id="form" method="POST" onsubmit="return false;">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="review" class="col-form-label">Review:</label>
                         <textarea type="text" class="form-control" id="review" name="review" rows="8"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="price" class="col-form-label">Rate:</label>
+                        <label for="rate" class="col-form-label">Rate (0-5):</label>
                         <input type="number" class="form-control" id="rate" name="rate"></input>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="button_give-review" data-bs-dismiss="modal">Give Review</button>
+                <button type="button" class="btn btn-primary" id="button-give-review" data-bs-dismiss="modal">Give Review</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editReviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Write your review</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" method="POST" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="review" class="col-form-label">Review:</label>
+                        <textarea type="text" class="form-control" id="review" name="review" rows="8"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rate" class="col-form-label">Rate (0-5):</label>
+                        <input type="number" class="form-control" id="rate" name="rate"></input>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button-give-review" data-bs-dismiss="modal">Give Review</button>
             </div>
         </div>
     </div>
@@ -104,45 +162,103 @@
 
 <script>
     async function getReview() {
-            return fetch("{% url 'view_book:get_review_json' %}").then((res) => res.json())
+            return fetch("{% url 'view_book:get_review_json' book.pk%}").then((res) => res.json())
         }
 
     refreshReviews()
 
     async function refreshReviews() {
-        document.getElementById("product_table").innerHTML = ""
-        const products = await getReview()
-        let htmlString = `<tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Description</th>
-            <th>Date Added</th>
-        </tr>`
-        products.forEach((item) => {
-            htmlString += `\n<tr>
-            <td>${item.fields.name}</td>
-            <td>${item.fields.price}</td>
-            <td>${item.fields.description}</td>
-            <td>${item.fields.date_added}</td>
-        </tr>` 
-        })
-        
-        document.getElementById("product_table").innerHTML = htmlString
+        document.getElementById("user-reviews-card").innerHTML = "";
+        const rawReviews = await getReview()
+        const reviews = rawReviews.reviews
+        reviews.forEach((review) => {
+            const reviewCard = document.createElement("div");
+            reviewCard.classList.add("review-card");
+            reviewCard.innerHTML = ""
+
+            const cardContent = `
+                <h5>${review.user}</h5>
+                <p style="mb-5">
+                    ${review.review_date}</p>
+                <p>${review.rate}/5</p>
+                <p>${review.review}</p>
+            `;
+
+            reviewCard.innerHTML += cardContent;
+
+            document.getElementById("user-reviews-card").appendChild(reviewCard);
+        });
     }
 
-        refreshProducts()
-
     function giveReview() {
-        fetch("{% url 'view_book:add_review_ajax' %}", {
+        fetch("{% url 'view_book:give_review_ajax' book.pk%}", {
             method: "POST",
             body: new FormData(document.querySelector('#form'))
-        }).then(refreshReviews)
+        })
+        .then((response) => {
+            if (response.status === 201) {
+                showAlert("Review submitted!", "alert-success");
+                $('#review-button').hide();
+            } else if (response.status === 400) {
+                response.text().then((errorMessage) => {
+                    showAlert(errorMessage, "alert-danger");
+                });
+            }
+        })
+        .then(refreshReviews)
 
         document.getElementById("form").reset()
         return false
     }
 
-    document.getElementById("button_give-review").onclick = giveReview
+    document.getElementById("button-give-review").onclick = giveReview
+
+    function showAlert(message, alertClass) {
+        const successAlert = $("#success-alert");
+        successAlert.removeClass();
+        successAlert.addClass("alert " + alertClass);
+
+        successAlert.html(`${message}`);
+
+        successAlert.fadeIn(500);
+        setTimeout(function() {
+            successAlert.fadeOut(500, function() {
+                successAlert.hide();
+            });
+        }, 1500);
+    }
+
+    function addToCart() {
+        fetch("{% url 'view_book:add_to_cart_ajax' book.pk%}", {
+            method: "POST",
+            headers: {
+            "X-CSRFToken": csrftoken,
+            "Content-Type": "application/json",
+          },
+        }).then((response) => {
+            if (response.status === 201) {
+                showAlert("Success! Book added to cart", "alert-success");
+            } else if (response.status === 400) {
+                showAlert("Error adding item to cart.", "alert-danger");
+            }
+        })
+        .then(refreshReviews)
+    }
+
+    const csrftoken = "{{ csrf_token }}";
+
+    var authStatusDiv = document.getElementById("auth-status");
+    var userIsAuthenticated = authStatusDiv.getAttribute("data-authenticated") === "true";
+
+    function addToCartOrRedirect() {
+        if (userIsAuthenticated) {
+            addToCart();
+        } else {
+            window.location.href = "{% url 'home:register' %}";
+        }
+    }
+
+    document.getElementById("add-to-cart").onclick = addToCartOrRedirect;
 
 
 </script>

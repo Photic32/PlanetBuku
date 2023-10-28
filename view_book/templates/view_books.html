@@ -49,7 +49,7 @@
 
 <div class="container m-2">
     {% for book in page_obj %}
-    <div class="book-item row mb-5">
+    <div class="book-item row">
             <div class="book-image d-flex justify-content-center col-sm-2">
                 <a href="{% url 'view_book:single_book_view' book.pk %} " class="link-unstyled link-offset-2 link-underline link-underline-opacity-0 ">
                 <img src="{{ book.image_m }}" class="img-fluid" alt="{{ book.title }}">
@@ -64,6 +64,7 @@
                 </a>
             </div>
     </div>
+    <hr>
     {% endfor %}
 </div>
 
