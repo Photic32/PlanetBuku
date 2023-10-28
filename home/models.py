@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import datetime
 from django.db import models
 from django.contrib.auth.models import User, UserManager, AbstractBaseUser, PermissionsMixin, AbstractUser, BaseUserManager
+from view_book.models import Review
 
 class Book(models.Model): # App 2
     isbn = models.TextField(null=True, blank=True)
@@ -26,7 +27,7 @@ class Review(models.Model): # App 3
 
 class Keranjang(models.Model): # App 4
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    book_list = models.ManyToManyField(Book, blank=True, null=True)
+    book_list = models.ManyToManyField(Book)
     jumlah_buku = models.IntegerField(default=0)
     
 class Peminjaman(models.Model): # App 5
@@ -43,7 +44,7 @@ class Peminjaman(models.Model): # App 5
 
 class Peminjam(models.Model): # App 1
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    peminjaman_list = models.ManyToManyField(Peminjaman, null=True)
+    peminjaman_list = models.ManyToManyField(Peminjaman)
     jumlah_buku_dipinjam = models.IntegerField(default=0)
 
 
