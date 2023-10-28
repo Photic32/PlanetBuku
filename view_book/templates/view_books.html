@@ -1,0 +1,165 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<style>
+    .link-unstyled, .link-unstyled:link, .link-unstyled:hover {
+        color: inherit;
+        text-decoration: inherit;
+    }
+
+    .search-info {
+        margin: 0;
+    }
+
+    .small {
+        font-size: 10px;
+        color: #878787
+    }
+
+    .not-visible {
+        display: none;
+    }
+
+    .result-card {
+        width: 100%;
+        background-color: #fefefe;
+        box-shadow: 0 4px 4px 0 #cccaca;
+        transition: 0.5s;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 0 auto;
+        z-index: 1000;
+    }
+</style>
+{% include 'header.html' %}
+
+<br>
+<div class="container d-flex justify-content-center">
+    <div id="search-bar" class="w-50">
+        <form id="search-form" class="form-inline" autocomplete="off" action="{% url 'view_book:search_books' %}" method="GET">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="search-input" name="q" placeholder="Search Book">
+            </div>
+        </form>
+        <div class="position-fixed w-50">
+            <div id="result-box" class="result-card not-visible"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container m-2">
+    {% for book in page_obj %}
+    <div class="book-item row mb-5">
+            <div class="book-image d-flex justify-content-center col-sm-2">
+                <a href="{% url 'view_book:single_book_view' book.pk %} " class="link-unstyled link-offset-2 link-underline link-underline-opacity-0 ">
+                <img src="{{ book.image_m }}" class="img-fluid" alt="{{ book.title }}">
+                </a>
+            </div>
+            <div class="book-details col-sm-8">
+                <a href="{% url 'view_book:single_book_view' book.pk %} " class="link-unstyled link-offset-2 link-underline link-underline-opacity-0 ">
+                <p><strong>Title:</strong> {{ book.title }}</p>
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                <p><strong>Publication Year:</strong> {{ book.publication_year }}</p>
+                <p><strong>Stock:</strong> {{ book.stock }}</p>
+                </a>
+            </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+
+{% include 'footer.html' %}
+
+<script>
+    const searchForm = document.getElementById('search-form')
+    const searchInput = searchForm.querySelector('input[name="q"]')
+    const resultsBox = document.getElementById('result-box')
+    const viewBookURL = "{% url 'view_book:single_book_view' 0 %}"
+    
+    const sendSearchData = (book) => {
+        fetch("{% url 'view_book:search' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ book }).toString(),
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (Array.isArray(data["data"])) {
+                if (resultsBox.classList.contains('not-visible')) {
+                    resultsBox.classList.remove('not-visible')
+                }
+
+                resultsBox.innerHTML = ""
+                data["data"].forEach(book => {
+                    resultsBox.innerHTML += `
+                    <a href="${viewBookURL.replace('0', book.pk)}" class="link-unstyled link-offset-2 link-underline link-underline-opacity-0">
+                        <div class="row mt-2 mb-2">
+                            <div>
+                                <span class="search-info">${book.title}</span>
+                                <span class="search-info small">by ${book.author}</span>
+                            </div>
+                        </div>
+                    </a>
+                    `;
+                });
+            } else {
+                if (searchInput.value.length > 0) {
+                    resultsBox.innerHTML = `<h6>${data["data"]}</h6>`;
+                } else {
+                    resultsBox.classList.add('not-visible');
+                }
+            }
+        })
+        .catch((error) => {
+            console.log('Fetch error:', error);
+        });
+    };
+    
+    searchInput.addEventListener('keyup', e=> {
+        if (e.key === 'Enter') {
+            searchForm.submit()
+        }
+
+        sendSearchData(e.target.value)
+    });
+
+    searchInput.addEventListener('blur', e=> {
+        setTimeout(() => {
+            if (!resultsBox.classList.contains('not-visible')) {
+                resultsBox.classList.add('not-visible');
+            }
+        }, 150);
+    })
+
+    window.addEventListener('scroll', function() {
+    if (!resultsBox.classList.contains('not-visible')) {
+        resultsBox.classList.add('not-visible');
+    }
+    })
+</script>
+{% endblock %}
