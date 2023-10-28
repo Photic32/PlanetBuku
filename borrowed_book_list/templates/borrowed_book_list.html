@@ -1,26 +1,138 @@
 {% extends 'base.html' %}
+{% block content %}
+{% include 'header.html' %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Daftar Buku Dipinjam dan Dikembalikan</title>
+    <style>
+        /* CSS untuk kartu */
+        .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust the card width as needed */
+        gap: 10px;
+        padding: 10px;
+        }
+        .card {
+            border: 1px solid #cccccc;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px #190d7e;
+            background-color: #aa5bb1;
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Daftar Buku Dipinjam</h1>
-    <ul>
-        {% for peminjaman in peminjaman_dipinjam %}
-            <li>{{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})</li>
-        {% empty %}
-            <li>Tidak ada buku yang sedang dipinjam.</li>
-        {% endfor %}
-    </ul>
+    <div class="card-container">
+        
+        <ul>
+            {% for peminjaman in peminjaman_dipinjam %}
+                <li class="card">
+                    {{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})
+                    <form method="post" action="{% url 'return_book' book.id %}">
+                        {% csrf_token %}
+                        <button type="submit">kembalikan buku</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li class="card">Tidak ada buku yang sedang dipinjam.</li>
+            {% endfor %}
+        </ul>
+    </div>
 
     <h1>Daftar Buku Dikembalikan</h1>
-    <ul>
-        {% for peminjaman in peminjaman_dikembalikan %}
-            <li>{{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})</li>
-        {% empty %}
-            <li>Tidak ada buku yang sudah dikembalikan.</li>
-        {% endfor %}
-    </ul>
+    <div class="card-container">
+        <ul>
+            {% for peminjaman in peminjaman_dikembalikan %}
+                <li id= "kembalikan" class="card">{{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Kesan</button>
+                </li>
+            {% empty %}
+                <li class="card">Tidak ada buku yang sudah dikembalikan.
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="text-align: center;">✨Tambahkan Kesan✨</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div>
+                        <p>Terimakasih telah membaca buku ini dan telah mengembalikan buku ini dengan tepat waktu! Berikan kesan terbaikmu terhadap buku ini!</p>
+                    </div>
+                    <form id="form" onsubmit="return false;">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="kesan" class="col-form-label">Kesan:</label>
+                            <textarea class="form-control" id="kesan" name="kesan"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Tambahkan kesan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function getKesan() {
+            return fetch("{% url 'borrowed_book_list:get_kesan_json' %}").then((res) => res.json())
+        }
+        async function refreshProducts() { 
+            document.getElementById("kesan").innerHTML = ""
+            const kesan = await getKesan()
+            let htmlString = `<tr>
+                <th>Kesan</th>
+            </tr>`
+            kesan.forEach((item) => {
+                htmlString += `\n<tr>
+                <td>${item.fields.kesan}</td>
+            </tr>` 
+            })
+            
+            document.getElementById("kembalikan").innerHTML = htmlString
+        }
+    
+        refreshProducts()
+    
+        function addKesan() {
+            fetch("{% url 'borrowed_book_list:add_kesan_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshProducts)
+    
+            document.getElementById("form").reset()
+            return false
+        }
+    
+        document.getElementById("button_add").onclick = addKesan
+    </script>
 </body>
 </html>
+{% include 'footer.html' %}
+{% endblock %}

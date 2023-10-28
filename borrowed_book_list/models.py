@@ -1,6 +1,6 @@
 from django.db import models
 from book.models import Book
-from django.contrib.auth.models import User
+from home.models import User
 
 class Peminjaman(models.Model): # App 5
     pengguna = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -13,4 +13,7 @@ class Peminjaman(models.Model): # App 5
         if self.tanggal_pengembalian is None:
             self.tanggal_pengembalian = self.tanggal_peminjaman.date() + datetime.timedelta(days=7)
         super(Peminjaman, self).save(*args, **kwargs)
+class KesanPeminjam(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    kesan = models.TextField()
 # Create your models here.
