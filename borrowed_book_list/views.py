@@ -35,9 +35,10 @@ def return_book(request, book_id):
 @csrf_exempt
 def add_kesan_ajax(request):
     if request.method == 'POST':
-        book = request.book
+        # book = request.book
+        book_id = request.POST.get("book_id")
         kesan = request.POST.get("kesan")
-
+        book = get_object_or_404(Book, pk=book_id)
         new_kesan = KesanPeminjam(book=book, kesan=kesan)
         new_kesan.save()
 

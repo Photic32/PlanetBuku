@@ -21,5 +21,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/books/", include("book.urls")),
     path("", include("home.urls")),
+    path("borrowed_book_list/", include("borrowed_book_list.urls")),
 
 ]

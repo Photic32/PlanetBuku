@@ -46,7 +46,7 @@
             {% for peminjaman in peminjaman_dipinjam %}
                 <li class="card">
                     {{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})
-                    <a href="{% url 'borrowed_book_list:return_book/book_id'%}" class="btn btn-link">Kembalikan Buku</a>
+                    <a href="{% url 'borrowed_book_list:return_book/book_id'%}" class="btn btn-link">Kembalikan Buku</a>
                 </li>
             {% empty %}
                 <li class="card">Tidak ada buku yang sedang dipinjam.</li>
@@ -65,7 +65,9 @@
                 <li class="card">Tidak ada buku yang sudah dikembalikan.
                 </li>
             {% endfor %}
+            <div id="ajax_cards" ></div>
         </ul>
+
     </div>
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -101,7 +103,7 @@
             return fetch("{% url 'borrowed_book_list:get_kesan_json' %}").then((res) => res.json());
         }
         async function refreshKesan() { 
-            const kesanContainer = document.getElementById("kesan");
+            const kesanContainer = document.getElementById("ajax_card");
             kesanContainer.innerHTML = "";
             // document.getElementById("kesan").innerHTML = ""
             const kesan = await getKesan();
