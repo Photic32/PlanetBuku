@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "home",
     "book",
     'widget_tweaks',
+    "view_book",
 ]
 
 MIDDLEWARE = [
