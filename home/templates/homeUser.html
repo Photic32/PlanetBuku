@@ -64,10 +64,10 @@ https://templatemo.com/tm-579-cyborg-gaming
                     <!-- ***** Search End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                        <li><a href="index.html" class="active">Home</a></li>
-                        <li><a href="browse.html">Browse</a></li>
-                        <li><a href="details.html">Cart</a></li>
-                        <li><a href="streams.html">Borrowed</a></li>
+                        <li><a href="{% url 'home:show_keranjang' %}"class="active">Home</a></li>
+                        <li><a href="{% url 'home:show_keranjang' %}">Browse</a></li>
+                        <li><a href="{% url 'home:show_keranjang' %}">Cart</a></li>
+                        <li><a href="{% url 'home:show_keranjang' %}">Borrowed</a></li>
                         <li><a href="{% url 'home:logout' %}">Logout</a></li>
                         <li><a href="profile.html">{{username}} <img src="{% static 'images/profile-header.jpg' %}" alt=""></a></li>
                     </ul>   

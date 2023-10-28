@@ -26,13 +26,13 @@ class Review(models.Model): # App 3
 
 class Keranjang(models.Model): # App 4
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    book_list = models.ManyToManyField(Book, blank=True)
+    book_list = models.ManyToManyField(Book, blank=True, null=True)
     jumlah_buku = models.IntegerField(default=0)
     
 class Peminjaman(models.Model): # App 5
     pengguna = models.ForeignKey(User, on_delete=models.CASCADE)
     tanggal_peminjaman = models.DateField(auto_now_add=True)
-    tanggal_pengembalian = models.DateField(null=True, blank=True)
+    tanggal_pengembalian = models.DateField(null=True)
     buku = models.ForeignKey(Book, on_delete=models.CASCADE)
     status = models.CharField(max_length=255, choices=[('dipinjam', 'Dipinjam'), ('dikembalikan', 'Dikembalikan')])
 
@@ -43,7 +43,7 @@ class Peminjaman(models.Model): # App 5
 
 class Peminjam(models.Model): # App 1
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    book_list = models.ManyToManyField(Book)
+    peminjaman_list = models.ManyToManyField(Peminjaman, null=True)
     jumlah_buku_dipinjam = models.IntegerField(default=0)
 
 

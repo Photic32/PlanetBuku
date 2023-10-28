@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.urls import reverse
 from book.models import Book
-from home.models import Peminjaman, Keranjang
+from home.models import Peminjaman, Keranjang, Peminjam
 from django.http import HttpResponse
 from django.core import serializers
 from django.shortcuts import redirect
@@ -24,29 +24,41 @@ def get_peminjaman_json(request):
     peminjamans = Peminjaman.objects.filter(pengguna=request.user)
     return HttpResponse(serializers.serialize('json', peminjamans))
 
+@login_required       #decorator login, gabisa diakses kalo ga login
 def get_keranjang_json(request):
     keranjangs = Keranjang.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', keranjangs))
+
+def show_keranjang(request):
+    if request.user.is_authenticated:
+        context = {
+            'last_login': request.COOKIES['last_login'],
+            'username' : request.user.username,
+        }
+
+        return render(request, "cart.html", context)
+    else:                                     
+        return render(request,"homeGuest.html")
 
 
 def show_home(request):
     if request.user.is_authenticated:
         user = request.user
-        if user.is_staff == True:
+        if user.is_staff == True:               #kalo staff
             context = {
-                'last_login': request.COOKIES['last_login'],
+                'last_login': request.COOKIES['last_login'], 
                 'username' : user.username,
             }
 
             return render(request, "homeAdmin.html", context)
-        else:
+        else:                                   #kalo user
             context = {
                 'last_login': request.COOKIES['last_login'],
                 'username' : user.username,
             }
 
             return render(request, "homeUser.html", context)
-    else:
+    else:                                       #kalo guest
         return render(request,"homeGuest.html")
 
 
@@ -60,6 +72,8 @@ def register(request):
                 user = form.save()
                 newKeranjang = Keranjang(user=user)
                 newKeranjang.save()
+                newPeminjam = Peminjam(user=user)
+                newPeminjam.save()
                 messages.success(request, 'Your account has been successfully created!')
                 return redirect('home:register')
             else:
@@ -83,3 +97,28 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('home:register'))
     response.delete_cookie('last_login')
     return response
+
+@csrf_exempt
+def submit_cart(request):
+    #handle keranjang
+    if request.method =='POST':
+        if request.POST.get('action') == 'cart_button':
+            token = request.POST.get('csrfmiddlewaretoken')
+            id=request.POST.get('id')
+            keranjang = Keranjang.objects.filter(user=request.user)
+            buku = Book.objects.get(pk = id)
+            keranjang.book_list.remove(buku)
+            newJumlahKeranjang = keranjang.jumlah_buku - 1
+            keranjang.update(jumlah_buku=newJumlahKeranjang)
+            #handle peminjaman
+            newPeminjaman=Peminjaman(pengguna=request.user, buku=buku, status='dipinjam')
+            temp = newPeminjaman.save()
+            #handle peminjam
+            peminjam = Peminjam.objects.filter(user=request.user)
+            peminjam.peminjam_list.add(temp)
+            newJumlahPeminjam = peminjam.jumlah_buku_dipinjam + 1
+            peminjam.update(jumlah_buku_dipinjam=newJumlahPeminjam)
+
+            return HttpResponse(b"ADDED", status=201)
+        
+    return HttpResponseNotFound()
