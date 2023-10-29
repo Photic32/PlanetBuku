@@ -5,11 +5,12 @@
 
 .search-info {
     margin: 0;
+    color: #ffffff;
 }
 
 .small {
     font-size: 10px;
-    color: #878787
+    color: #343a40
 }
 
 .not-visible {
@@ -18,8 +19,8 @@
 
 .result-card {
     width: 100%;
-    background-color: #fefefe;
-    box-shadow: 0 4px 4px 0 #cccaca;
+    background-color: #2f3234;
+    box-shadow: 0 4px 4px 0 #1d1c1f;
     transition: 0.5s;
     border-radius: 5px;
     padding: 10px;
@@ -27,38 +28,74 @@
     z-index: 1000;
 }
 
-.desc-list-item dt{
-    float: left;
-    width: 50%;
-    padding: 0;
-    margin: 0;
-    display: table-row;
+/* bunch of bootstrap color change or just color change really*/
+.pagination.dark-theme .page-link {
+    background-color: #343a40;
+    color: #ffffff;
+    border-color: #343a40;
 }
 
-.desc-list-item dd{
-    float: left;
-    width: 50%;
-    padding: 0;
-    margin: 0;
-    display: table-row;
+.pagination.dark-theme .page-item.active .page-link {
+    background-color: #EA2C62;
+    border-color: #EA2C62;
 }
 
-.desc-list {
-    width: 100%;
-    overflow: hidden;
-    padding: 0;
-    margin: 0;
-    display: table;
+.pagination.dark-theme .page-item.disabled .page-link {
+    background-color: #343a40;
+    color: #6c757d;
 }
 
-.review-card {
-    width: 100%;
-    max-width: 215px;
-    border: 1px solid #73beb0;
-    padding: 10px;
-    box-shadow: 2px 2px 5px rgba(207, 165, 196, 0.2);
-    border-radius: 5px;
-    background-color: #fff;
-    margin: 10px 5px 10px 0px;
-    word-wrap: break-word;
+#add-to-cart {
+    background-color: #EA2C62;
+    border-color: #EA2C62; 
+    color: #ffffff; 
+}
+
+#add-to-cart:hover {
+    background-color: #ff0066; 
+    border-color: #ff0066;
+    color: #ffffff;
+}
+.book-details h5 {
+    color: #EA2C62; 
+}
+
+.desc-list dt {
+    color: #c9c8c8; 
+}
+
+.desc-list dd {
+    color: #979090;
+}
+
+#back-button {
+    color: #EA2C62; 
+    text-decoration: none;
+}
+
+.custom-rate-color {
+    border-color: #EA2C62;
+    color: #EA2C62; 
+}
+
+.custom-rate-color:hover {
+    border-color: #EA2C62;
+    background-color: #EA2C62;
+    color: #ffffff;
+}
+
+.custom-button-color {
+    background-color: #EA2C62;
+    border-color: #ff0066;
+    color: #ffffff;
+}
+
+.custom-mark-color {
+    background-color: #fe5786;
+    color: #ffffff; 
+}
+
+.review-text {
+    font-size: 100%;
+    color: #d3d3d3; 
 }
