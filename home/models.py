@@ -9,30 +9,13 @@ from django.contrib.auth.models import User, UserManager, AbstractBaseUser, Perm
 from view_book.models import Review
 from datetime import timedelta
 from django.utils import timezone
-# class Book(models.Model): # App 2
-#     isbn = models.TextField(null=True, blank=True)
-#     title = models.TextField(null=True, blank=True)
-#     author = models.TextField(null=True, blank=True)
-#     publication_year = models.IntegerField(null=True, blank=True)
-#     publisher = models.TextField(null=True, blank=True)
-#     image_s = models.TextField(null=True, blank=True)
-#     image_m = models.TextField(null=True, blank=True)
-#     image_l = models.TextField(null=True, blank=True)
-#     stock = models.IntegerField(null=True, blank=True)
-
-# class Review(models.Model): # App 3
-#     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     review = models.TextField()
-#     rate = models.IntegerField()
-#     review_date = models.DateField(auto_now_add=True)
 
 def in_seven_days():
     return timezone.now() + timedelta(days=7)
 
 class Keranjang(models.Model): # App 4
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    book_list = models.ManyToManyField(Book, null=True)
+    book_list = models.ManyToManyField(Book)
     jumlah_buku = models.IntegerField(default=0)
     
 class Peminjaman(models.Model): # App 5
