@@ -56,6 +56,7 @@ def show_page(request):
 
 @staff_member_required
 @require_POST
+@csrf_exempt
 def edit_peminjaman(request, id):
     # Get berdasarkan ID
     peminjaman = Peminjaman.objects.get(pk = id)
