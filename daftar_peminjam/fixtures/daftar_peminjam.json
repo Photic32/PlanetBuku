@@ -25,7 +25,6 @@
       "fields": {
         "user": 1,
         "book_list": [1],
-        "pengembalian_paling_awal": "2023-10-29",
         "jumlah_buku_dipinjam": 1
       }
     },
@@ -55,7 +54,6 @@
       "fields": {
         "user": 2,
         "book_list": [1, 2],
-        "pengembalian_paling_awal": "2023-11-01",
         "jumlah_buku_dipinjam": 2
       }
     }

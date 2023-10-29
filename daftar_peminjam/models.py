@@ -13,8 +13,7 @@ class Peminjaman(models.Model): # App 5
     status = models.CharField(max_length=255, choices=[('dipinjam', 'Dipinjam'), ('dikembalikan', 'Dikembalikan')])
 
 class Peminjam(models.Model): # App 1
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    book_list = models.ManyToManyField(Peminjaman)
-    pengembalian_paling_awal = models.DateField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book_list = models.ManyToManyField(Peminjaman,  blank=True)
     jumlah_buku_dipinjam = models.IntegerField(default=0)
     
