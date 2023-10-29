@@ -6,8 +6,9 @@ from django.utils.timezone import datetime
 from django.db import models
 from book.models import Book
 from django.contrib.auth.models import User, UserManager, AbstractBaseUser, PermissionsMixin, AbstractUser, BaseUserManager
-#from view_book.models import Review
-
+from view_book.models import Review
+from datetime import timedelta
+from django.utils import timezone
 # class Book(models.Model): # App 2
 #     isbn = models.TextField(null=True, blank=True)
 #     title = models.TextField(null=True, blank=True)
@@ -26,21 +27,24 @@ from django.contrib.auth.models import User, UserManager, AbstractBaseUser, Perm
 #     rate = models.IntegerField()
 #     review_date = models.DateField(auto_now_add=True)
 
+def in_seven_days():
+    return timezone.now() + timedelta(days=7)
+
 class Keranjang(models.Model): # App 4
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    book_list = models.ManyToManyField(Book)
+    book_list = models.ManyToManyField(Book, null=True)
     jumlah_buku = models.IntegerField(default=0)
     
 class Peminjaman(models.Model): # App 5
     pengguna = models.ForeignKey(User, on_delete=models.CASCADE)
     tanggal_peminjaman = models.DateField(auto_now_add=True)
-    tanggal_pengembalian = models.DateField(null=True)
+    tanggal_pengembalian = models.DateField(default=in_seven_days)
     buku = models.ForeignKey(Book, on_delete=models.CASCADE)
     status = models.CharField(max_length=255, choices=[('dipinjam', 'Dipinjam'), ('dikembalikan', 'Dikembalikan')])
 
     def save(self, *args, **kwargs):
         if self.tanggal_pengembalian is None:
-            self.tanggal_pengembalian = self.tanggal_peminjaman.date() + datetime.timedelta(days=7)
+            self.tanggal_pengembalian = self.tanggal_peminjaman.today() + datetime.timedelta(days=7)
         super(Peminjaman, self).save(*args, **kwargs)
 
 class Peminjam(models.Model): # App 1

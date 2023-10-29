@@ -16,6 +16,20 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
+
+def get_bukuPeminjaman_json(request):
+    peminjaman = Peminjaman.objects.filter(pengguna=request.user)
+    bukuKeranjang =[]
+    for peminjaman1 in peminjaman:
+        bukuKeranjang.append(peminjaman1.buku)
+    
+    return HttpResponse(serializers.serialize('json', bukuKeranjang))
+
+def getBukuKeranjang_json(request):
+    keranjang = Keranjang.objects.filter(user=request.user)[0]
+    bukuKeranjang = keranjang.book_list.all()
+    return HttpResponse(serializers.serialize('json', bukuKeranjang))
+
 def get_book_json(request):
     books = Book.objects.filter(stock__gt=0)
     return HttpResponse(serializers.serialize('json', books))
@@ -106,19 +120,21 @@ def submit_cart(request):
             token = request.POST.get('csrfmiddlewaretoken')
             id=request.POST.get('id')
             keranjang = Keranjang.objects.filter(user=request.user)
-            buku = Book.objects.get(pk = id)
-            keranjang.book_list.remove(buku)
-            newJumlahKeranjang = keranjang.jumlah_buku - 1
+            buku = Book.objects.filter(pk = id)
+            newStockBuku = buku[0].stock - 1
+            buku.update(stock=newStockBuku)
+            keranjang[0].book_list.remove(buku[0])
+            newJumlahKeranjang = keranjang[0].jumlah_buku - 1
             keranjang.update(jumlah_buku=newJumlahKeranjang)
             #handle peminjaman
             newPeminjaman=Peminjaman(pengguna=request.user, buku=buku, status='dipinjam')
             temp = newPeminjaman.save()
             #handle peminjam
             peminjam = Peminjam.objects.filter(user=request.user)
-            peminjam.peminjam_list.add(temp)
-            newJumlahPeminjam = peminjam.jumlah_buku_dipinjam + 1
+            peminjam[0].peminjaman_list.add(temp)
+            newJumlahPeminjam = peminjam[0].jumlah_buku_dipinjam + 1
             peminjam.update(jumlah_buku_dipinjam=newJumlahPeminjam)
-
+        
             return HttpResponse(b"ADDED", status=201)
         
     return HttpResponseNotFound()
