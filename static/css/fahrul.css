@@ -1,0 +1,40 @@
+body {
+    background-color: #1e1e1e;
+    font-family: Arial, sans-serif;
+    color: #d4d4d4;
+    }
+
+.tableau {
+    background-color: #292929;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    overflow: hidden;
+}
+
+.tableau th, .tableau td {
+    border: none;
+    padding: 15px 20px;
+}
+
+.tableau th {
+    color: #888;
+}
+
+.tableau img {
+    width: 130%;
+    height: 130%;
+    border-radius: 10px;
+}
+
+.btn-dark-red {
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 15px;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.btn-dark-red:hover {
+    background-color: #c0392b;
+}

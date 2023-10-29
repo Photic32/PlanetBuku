@@ -16,10 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/books/", include("book.urls")),
     path("", include("home.urls")),
-
+    path("borrowed_book_list/", include("borrowed_book_list.urls")),
+    path("browse/", include("view_book.urls")),
+    path("adminbook/", include("edit_info.urls")),
+    path("adminusers/", include("daftar_peminjam.urls"))
 ]

@@ -1,0 +1,245 @@
+{% load widget_tweaks %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <title>PlanetBuku</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+
+    <link rel="icon" href="{% static 'images/logo1.png' %}">
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="{% static 'fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'templatemo-cyborg-gaming.css' %}">
+    <link rel="stylesheet" href="{% static 'owl.css' %}">
+    <link rel="stylesheet" href="{% static 'animate.css' %}">
+    <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="{% static 'scrollbar.css' %}">
+<!--
+
+TemplateMo 579 Cyborg Gaming
+
+https://templatemo.com/tm-579-cyborg-gaming
+
+-->
+  </head>
+
+<body>
+
+  <!-- ***** Preloader Start ***** -->
+  <div id="js-preloader" class="js-preloader">
+    <div class="preloader-inner">
+      <span class="dot"></span>
+      <div class="dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+  <!-- ***** Preloader End ***** -->
+
+  <!-- ***** Header Area Start ***** -->
+  <header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <!-- ***** Logo Start ***** -->
+                    <a href="{% url 'home:show_home' %}" class="logo">
+                        <img src="{% static 'images/logo2.png' %}" alt="">
+                    </a>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Search End ***** -->
+                    <!-- ***** Search End ***** -->
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="nav">
+                      <li><a href="{% url 'home:show_home' %}"class="active">Home</a></li>
+                      <li><a href="{% url 'view_book:view_books' %}">Browse</a></li>
+                      <li><a href="{% url 'home:show_keranjang' %}">Cart</a></li>
+                      <li><a href="{% url 'home:show_keranjang' %}">Borrowed</a></li>
+                      <li><a href="{% url 'home:logout' %}">Logout</a></li>
+                      <li><a href="{% url 'home:show_profile' %}">{{username}} <img src="{% static 'images/profile-header.jpg' %}" alt=""></a></li>
+                  </ul>   
+                  <a class='menu-trigger'>
+                      <span>Menu</span>
+                  </a>
+                    <!-- ***** Menu End ***** -->
+                </nav>
+            </div>
+        </div>
+    </div>
+  </header>
+  <!-- ***** Header Area End ***** -->
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="page-content">
+
+          <!-- ***** Banner Start ***** -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="main-profile ">
+                <div class="row">
+                  <div class="col-lg-4">
+                    <img src="{% static 'images/profile.jpg' %}" alt="" style="border-radius: 23px;">
+                  </div>
+                  <div class="col-lg-4 align-self-center">
+                    <div class="main-info header-text">
+                      <span>User</span>
+                      <h4>{{username}}</h4>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 align-self-center">
+                    <ul>
+                      <li>Books Borrowed <span>{{borrowedCount}}</span></li>
+                      <li>Reviews Count <span>{{reviewsCount}}</span></li>
+                      <li>Books on Cart <span>{{cartCount}}</span></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ***** Banner End ***** -->
+
+          <!-- ***** Gaming Library Start ***** -->
+          <div class="gaming-library profile-library">
+            <div class="col-lg-12">
+              <div class="heading-section">
+                <h4><em>Your Recent</em> Reviews</h4>
+              </div>
+              <div id="putReviews">
+                <!-- <div class="item">
+                  <ul>
+                    <li><img src="assets/images/game-01.jpg" alt="" class="templatemo-item"></li>
+                    <li><h4>Dota 2</h4><span>Sandbox</span></li>
+                    <li><h4>Date Added</h4><span>24/08/2036</span></li>
+                    <li><h4>Hours Played</h4><span>634 H 22 Mins</span></li>
+                    <li><h4>Currently</h4><span>Downloaded</span></li>
+                    <li><div class="main-border-button border-no-active"><a href="#">Donwloaded</a></div></li>
+                  </ul>
+                </div>
+                <div class="item">
+                  <ul>
+                    <li><img src="assets/images/game-02.jpg" alt="" class="templatemo-item"></li>
+                    <li><h4>Fortnite</h4><span>Sandbox</span></li>
+                    <li><h4>Date Added</h4><span>22/06/2036</span></li>
+                    <li><h4>Hours Played</h4><span>745 H 22 Mins</span></li>
+                    <li><h4>Currently</h4><span>Downloaded</span></li>
+                    <li><div class="main-border-button border-no-active"><a href="#">Donwloaded</a></div></li>
+                  </ul>
+                </div>
+                <div class="item last-item">
+                  <ul>
+                    <li><img src="assets/images/game-03.jpg" alt="" class="templatemo-item"></li>
+                    <li><h4>CS-GO</h4><span>Sandbox</span></li>
+                    <li><h4>Date Added</h4><span>21/04/2022</span></li>
+                    <li><h4>Hours Played</h4><span>632 H 46 Mins</span></li>
+                    <li><h4>Currently</h4><span>Downloaded</span></li>
+                    <li><div class="main-border-button border-no-active"><a href="#">Donwloaded</a></div></li>
+                  </ul>
+                </div> -->
+              </div>
+            </div>
+          </div>
+          <!-- ***** Gaming Library End ***** -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>Copyright © 2036 <a href="#">Cyborg Gaming</a> Company. All rights reserved. 
+          
+          <br>Design: <a href="https://templatemo.com" target="_blank" title="free CSS templates">TemplateMo</a>  Distributed By <a href="https://themewagon.com" target="_blank" >ThemeWagon</a></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- Scripts -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+  <script src="{% static 'js/isotope.min.js' %}"></script>
+  <script src="{% static 'js/owl-carousel.js' %}"></script>
+  <script src="{% static 'js/tabs.js' %}"></script>
+  <script src="{% static 'js/popup.js' %}"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+  <script>
+    async function getReviews() {
+        return fetch("{% url 'home:get_reviews_json' %}").then((res) => res.json())
+    }
+    async function getBukuReviews() {
+        return fetch("{% url 'home:get_bukuReviews_json' %}").then((res) => res.json())
+    }
+
+    async function refreshReviews(){
+      //buat display buku
+      document.getElementById("putReviews").innerHTML = ""
+      const reviews = await getReviews()
+      const bukuReviews = await getBukuReviews()
+      let htmlString = ``
+      if(reviews.length == 0){
+        htmlString += `
+          <div class="item">
+            <h4 style="text-align: center;">You Haven't Reviewed Any Book Yet<h4>
+          </div>
+        `
+      }else if(reviews.length<=3){
+        for(let i = reviews.length-1; i>=0; i--){
+          htmlString += `
+          <div class="item">
+              <ul>
+                <li><img src="${bukuReviews[i].fields.image_l}" alt="" style="width: 80px; height: 80px; object-fit: cover; object-position: 25% 25%;" class="templatemo-item"></li>
+                <li><h4>${bukuReviews[i].fields.title}</h4><span>${bukuReviews[i].fields.author}</span></li>
+                <li><h4>Date Added</h4><span>${reviews[i].fields.review_date}</span></li>
+                <li><h4>Rating</h4><span>${reviews[i].fields.rate}</span></li>
+                <li><h4>Review</h4><span>${reviews[i].fields.review.substring(0,25)+"..."}</span></li>
+                <li><div class="main-border-button"><a href="#">Details</a></div></li>
+              </ul>
+            </div>
+          `
+        }
+      }else{
+        for(let i = reviews.length-1; i>=reviews.length-3; i--){
+          htmlString += `
+          <div class="item">
+              <ul>
+                <li><img src="${bukuReviews[i].fields.image_l}" alt="" style="width: 80px; height: 80px; object-fit: cover; object-position: 25% 25%;" class="templatemo-item"></li>
+                <li><h4>${bukuReviews[i].fields.title}</h4><span>${bukuReviews[i].fields.author}</span></li>
+                <li><h4>Date Added</h4><span>${reviews[i].fields.review_date}</span></li>
+                <li><h4>Rating</h4><span>${reviews[i].fields.rate}</span></li>
+                <li><h4>Review</h4><span>${reviews[i].fields.review.substring(0,25)+"..."}</span></li>
+              </ul>
+            </div>
+          `
+        }
+      }
+      document.getElementById("putReviews").innerHTML = htmlString
+    }
+    refreshReviews()
+  </script>
+
+  </body>
+
+</html>

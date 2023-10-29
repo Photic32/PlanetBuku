@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {{username}} {% endblock %}
+{% block content %}
+
+{% include 'header.html' %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/fahrul.css' %}">
+
+<!--  bagian atas -->
+<div class="container p-5">
+    <h1 class="text-center">
+        Melihat Buku yang Dipinjam Oleh {{ peminjam.user.username }}
+    </h1>
+</div>
+
+<!--search-->
+<form id="book-search-form" style="width: 90%; margin: auto;">
+    <input type="hidden" name="user_id" value="{{ id }}" id="hidden_id">
+    <div style="display: flex; justify-content: space-between;">
+        <!-- Buku -->
+        <div style="flex: 1;">
+            <label>Judul : </label>
+            <input style="width: 70%;" class="form-control border-end-0 border" type="text" placeholder="Search" id="example-search-input" name="title">
+        </div>
+        <!-- ISBN -->
+        <div style="flex: 1;">
+            <label>ISBN : </label>
+            <input style="width: 70%;" class="form-control border-end-0 border" type="text" placeholder="ISBN" id="isbn-search-input" name="isbn">
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <!-- Author Name -->
+        <div style="flex: 1;">
+            <label>Author Name : </label>
+            <input style="width: 70%;" class="form-control border-end-0 border" type="text" placeholder="Author Name" id="author-search-input" name="author">
+        </div>
+        <!-- Publication Year -->
+        <div style="flex: 1;">
+            <label>Publication Year : </label>
+            <input style="width: 70%;" class="form-control border-end-0 border" type="text" placeholder="Publication Year" id="publication-year-search-input" name="year">
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <!-- Publisher -->
+        <div style="flex: 1;">
+            <label>Publisher : </label>
+            <input style="width: 70%;" class="form-control border-end-0 border" type="text" placeholder="Publisher" id="publisher-search-input" name="publisher">
+        </div>
+        <!-- Submit Button -->
+        <div style="flex: 1; display: flex; align-items: flex-end; justify-content: flex-start;">
+            <button class="btn btn-outline-primary" type="submit">
+                Search
+            </button>
+        </div>
+    </div>
+</form>
+
+
+
+<!--  tabel -->
+<div  class="mx-auto" style="width: 90%">
+
+<div id="listBuku" class="mt-5">
+    
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-dark">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body bg-dark">
+          This is the content of the modal.
+        </div>
+        <div class="modal-footer bg-dark">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="{% static 'js/fahrul_peminjam.js' %}"></script>
+
+{% include 'footer.html' %}
+{% endblock %}

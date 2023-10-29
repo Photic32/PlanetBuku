@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Peminjam : {{ username}}{% endblock %}
+{% block content %}
+
+{% include 'header.html' %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/fahrul.css' %}">
+
+<!--  bagian atas -->
+<div class="container p-5">
+    <h1 class="text-center">
+        Daftar Peminjam Buku
+    </h1>
+    <h5 class="text-center">Sekarang ada {{jumlah_peminjam}} Peminjam Terdaftar</h5>
+</div>
+<!--  tabel -->
+<div  class="mx-auto" style="width: 90%">
+<table class="tableau" style="width: 100%" id="tabel-user">
+    
+
+</table>
+</div>
+  
+<script src="{% static 'js/fahrul_main.js' %}"></script>
+
+
+{% include 'footer.html' %}
+{% endblock %}
