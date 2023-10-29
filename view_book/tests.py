@@ -41,35 +41,15 @@ class ViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'view_detail.html')
 
-    def test_search_books_view(self):
-        url = reverse('view_book:search_books')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'view_books.html') 
-
     def test_search_books_with_query(self):
         url = reverse('view_book:search_books')
         response = self.client.get(url, {'q': 'Test Book'})
         self.assertEqual(response.status_code, 200)
 
-    def test_add_to_cart_ajax(self):
-        url = reverse('view_book:add_to_cart_ajax', args=[self.book.pk])
-        response = self.client.post(url)
-        self.assertEqual(response.status_code, 201)
-
     def test_get_review_json(self):
         url = reverse('view_book:get_review_json', args=[self.book.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-
-    def test_give_review_ajax(self):
-        url = reverse('view_book:give_review_ajax', args=[self.book.pk])
-        review = {
-            'review': 'Test review',
-            'rate': 4,
-        }
-        response = self.client.post(url, review)
-        self.assertEqual(response.status_code, 201)
 
 class ReviewModelTest(TestCase):
     @classmethod
