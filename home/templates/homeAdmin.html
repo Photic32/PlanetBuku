@@ -56,7 +56,7 @@ https://templatemo.com/tm-579-cyborg-gaming
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-                    <a href="index.html" class="logo">
+                    <a href="{% url 'home:show_home' %}" class="logo">
                         <img src="{% static 'images/logo2.png' %}" alt="">
                     </a>
                     <!-- ***** Logo End ***** -->
@@ -64,7 +64,7 @@ https://templatemo.com/tm-579-cyborg-gaming
                     <!-- ***** Search End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                        <li><a href="index.html" class="active">Home</a></li>
+                        <li><a href="{% url 'home:show_home' %}" class="active">Home</a></li>
                         <li><a href="browse.html">Books</a></li>
                         <li><a href="details.html">Users</a></li>
                         <li><a href="{% url 'home:logout' %}">Logout</a></li>
