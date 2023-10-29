@@ -67,7 +67,7 @@ https://templatemo.com/tm-579-cyborg-gaming
                         <li><a href="{% url 'home:show_home' %}"class="active">Home</a></li>
                         <li><a href="{% url 'view_book:view_books' %}">Browse</a></li>
                         <li><a href="{% url 'home:show_keranjang' %}">Cart</a></li>
-                        <li><a href="{% url 'home:show_keranjang' %}">Borrowed</a></li>
+                        <li><a href="{% url 'borrowed_book_list:borrowed_book_list' %}">Borrowed</a></li>
                         <li><a href="{% url 'home:logout' %}">Logout</a></li>
                         <li><a href="{% url 'home:show_profile' %}">{{username}} <img src="{% static 'images/profile-header.jpg' %}" alt=""></a></li>
                     </ul>   

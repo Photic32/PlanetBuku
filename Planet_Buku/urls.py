@@ -23,7 +23,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/books/", include("book.urls")),
     path("", include("home.urls")),
+    path("borrowed_book_list/", include("borrowed_book_list.urls")),
     path("browse/", include("view_book.urls")),
     path("adminbook/", include("edit_info.urls")),
-    path("adminusers", include("daftar_peminjam.urls"))
+    path("adminusers/", include("daftar_peminjam.urls"))
 ]

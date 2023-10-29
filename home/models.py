@@ -9,7 +9,7 @@ from django.contrib.auth.models import User, UserManager, AbstractBaseUser, Perm
 from view_book.models import Review
 from datetime import timedelta
 from django.utils import timezone
-from daftar_peminjam.models import Peminjam, Peminjaman
+from borrowed_book_list.models import Peminjaman
 
 def in_seven_days():
     return timezone.now() + timedelta(days=7)

@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     "book",
     'widget_tweaks',
     "view_book",
-    "edit_info"
+    "edit_info",
+    "borrowed_book_list",
 ]
 
 MIDDLEWARE = [

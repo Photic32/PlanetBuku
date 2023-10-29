@@ -22,6 +22,4 @@ urlpatterns = [
     path('get-buku-peminjaman', get_bukuPeminjaman_json, name='get_bukuPeminjaman_json'),
     path('get-reviews-peminjaman', get_bukuReviews_json, name='get_bukuReviews_json'),
     path('show-profile', show_profile, name='show_profile'),
-
-
 ]
