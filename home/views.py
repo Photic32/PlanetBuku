@@ -17,11 +17,31 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
+def show_profile(request):
+    if request.user.is_authenticated:
+        user = request.user
+        borrowedCount = Peminjaman.objects.filter(pengguna=request.user).count()
+        reviewsCount = Review.objects.filter(user=request.user).count()
+        cartCount = Keranjang.objects.filter(user=request.user)[0].jumlah_buku
+            #kalo staff
+        context = {
+            'last_login': request.COOKIES['last_login'], 
+            'username' : user.username,
+            'borrowedCount' : borrowedCount,
+            'reviewsCount' : reviewsCount,
+            'cartCount' : cartCount,
+        }
+
+        return render(request, "profile.html", context)
+ 
+    else:                                       #kalo guest
+        return render(request,"homeGuest.html")
+
 def get_bukuReviews_json(request):
-    review = Review.objects.filter(pengguna=request.user)
+    review = Review.objects.filter(user=request.user)
     bukuReview=[]
     for review1 in review:
-        bukuReview.append(review.buku)
+        bukuReview.append(review1.book)
     
     return HttpResponse(serializers.serialize('json', bukuReview))
 

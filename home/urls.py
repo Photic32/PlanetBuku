@@ -1,5 +1,5 @@
 from django.urls import path
-from home.views import register, logout_user, show_home, get_book_json, get_peminjaman_json, get_keranjang_json, submit_cart, show_keranjang, getBukuKeranjang_json, get_bukuPeminjaman_json, get_reviews_json, get_bukuReviews_json, remove_cart
+from home.views import register, logout_user, show_home, get_book_json, get_peminjaman_json, get_keranjang_json, submit_cart, show_keranjang, getBukuKeranjang_json, get_bukuPeminjaman_json, get_reviews_json, get_bukuReviews_json, remove_cart, show_profile
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf import settings
@@ -21,6 +21,7 @@ urlpatterns = [
     path('get-buku-keranjang', getBukuKeranjang_json, name='getBukuKeranjang_json'),
     path('get-buku-peminjaman', get_bukuPeminjaman_json, name='get_bukuPeminjaman_json'),
     path('get-reviews-peminjaman', get_bukuReviews_json, name='get_bukuReviews_json'),
+    path('show-profile', show_profile, name='show_profile'),
 
 
 ]

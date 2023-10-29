@@ -68,7 +68,7 @@ https://templatemo.com/tm-579-cyborg-gaming
                       <li><a href="{% url 'home:show_keranjang' %}">Cart</a></li>
                       <li><a href="{% url 'home:show_keranjang' %}">Borrowed</a></li>
                       <li><a href="{% url 'home:logout' %}">Logout</a></li>
-                      <li><a href="profile.html">{{username}} <img src="{% static 'images/profile-header.jpg' %}" alt=""></a></li>
+                      <li><a href="{% url 'home:show_profile' %}">{{username}} <img src="{% static 'images/profile-header.jpg' %}" alt=""></a></li>
                   </ul>   
                   <a class='menu-trigger'>
                       <span>Menu</span>
@@ -199,7 +199,7 @@ https://templatemo.com/tm-579-cyborg-gaming
       const reviews = await getReviews()
       const bukuReviews = await getBukuReviews()
       let htmlString = ``
-      if(reviews.length = 0){
+      if(reviews.length == 0){
         htmlString += `
           <div class="item">
             <h4 style="text-align: center;">You Haven't Reviewed Any Book Yet<h4>
@@ -221,7 +221,7 @@ https://templatemo.com/tm-579-cyborg-gaming
           `
         }
       }
-      document.getElementById("putDisplay").innerHTML = htmlString
+      document.getElementById("putReviews").innerHTML = htmlString
     }
     refreshReviews()
   </script>
