@@ -12,7 +12,9 @@ class ViewBooks(ListView):
     model = Book
     template_name = 'view_books.html'
     context_object_name = 'books'
-    queryset = Book.objects.all()
+
+    def get_queryset(self):
+        return Book.objects.order_by('id')
 
 class ViewBook(DetailView):
     model = Book
@@ -41,7 +43,7 @@ class BookSearchView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q')
-        return Book.objects.filter(title__icontains=query)
+        return Book.objects.filter(title__icontains=query).order_by('id')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
