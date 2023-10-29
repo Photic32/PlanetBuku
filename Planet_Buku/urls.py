@@ -25,4 +25,5 @@ urlpatterns = [
     path("", include("home.urls")),
     path("browse/", include("view_book.urls")),
     path("adminbook/", include("edit_info.urls")),
+    path("adminusers", include("daftar_peminjam.urls"))
 ]
