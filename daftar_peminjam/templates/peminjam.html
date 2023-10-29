@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {{username}} {% endblock %}
+{% block content %}
+
+{% include 'header.html' %}
+<style>
+    body {
+    background-color: #1e1e1e;
+    font-family: Arial, sans-serif;
+    color: #d4d4d4;
+    }
+
+.tableau {
+    background-color: #292929;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    overflow: hidden;
+}
+
+.tableau th, .tableau td {
+    border: none;
+    padding: 15px 20px;
+}
+
+.tableau th {
+    color: #888;
+}
+
+.tableau img {
+    width: 130%;
+    height: 130%;
+    border-radius: 10px;
+}
+
+.btn-dark-red {
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 15px;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.btn-dark-red:hover {
+    background-color: #c0392b;
+}
+
+</style>
+
+
+<!--  bagian atas -->
+<div class="container p-5">
+    <h1 class="text-center">
+        Melihat Buku yang Dipinjam Oleh {{ peminjam.user.username }}
+    </h1>
+</div>
+
+<!--search-->
+<form id="book-search-form" style="width: 90%; margin: auto;">
+    <input type="hidden" name="user_id" value="{{ id }}" id="hidden_id">
+    <div style="display: flex; justify-content: space-between;">
+        <!-- Buku -->
+        <div style="flex: 1;">
+            <label>Judul : </label>
+            <input style="width: 70%;" class="form-control border-end-0 border" type="text" placeholder="Search" id="example-search-input" name="title">
+        </div>
+        <!-- ISBN -->
+        <div style="flex: 1;">
+            <label>ISBN : </label>
+            <input style="width: 70%;" class="form-control border-end-0 border" type="text" placeholder="ISBN" id="isbn-search-input" name="isbn">
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <!-- Author Name -->
+        <div style="flex: 1;">
+            <label>Author Name : </label>
+            <input style="width: 70%;" class="form-control border-end-0 border" type="text" placeholder="Author Name" id="author-search-input" name="author">
+        </div>
+        <!-- Publication Year -->
+        <div style="flex: 1;">
+            <label>Publication Year : </label>
+            <input style="width: 70%;" class="form-control border-end-0 border" type="text" placeholder="Publication Year" id="publication-year-search-input" name="year">
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+        <!-- Publisher -->
+        <div style="flex: 1;">
+            <label>Publisher : </label>
+            <input style="width: 70%;" class="form-control border-end-0 border" type="text" placeholder="Publisher" id="publisher-search-input" name="publisher">
+        </div>
+        <!-- Submit Button -->
+        <div style="flex: 1; display: flex; align-items: flex-end; justify-content: flex-start;">
+            <button class="btn btn-outline-primary" type="submit">
+                Search
+            </button>
+        </div>
+    </div>
+</form>
+
+
+
+<!--  tabel -->
+<div  class="mx-auto" style="width: 90%">
+
+<div id="listBuku" class="mt-5">
+    
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-dark">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body bg-dark">
+          This is the content of the modal.
+        </div>
+        <div class="modal-footer bg-dark">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function editData(id, title){
+        const baseUrl = "{% url 'daftar_peminjam:get_pinjaman_json' id=0 %}";
+        const url = baseUrl.replace('0', id);
+        
+        fetch(url).then(
+            response => response.json()
+        ).then(
+            data => {
+                $("#exampleModal").find(".modal-title").text("Extend Peminjaman : " + title + " Oleh " + "{{ peminjam.user.username }}");
+                
+                $("#exampleModal").find(".modal-body").html(
+                    `
+                    <form id="formEdit" onsubmit="submitForm(event, ${id})">
+                        <div class="mb-3">
+                            <label for="tanggal_pengembalian" class="form-label">Tanggal Pengembalian</label>
+                            <input type="date" name="tanggal_pengembalian" class="form-control" id="tanggal_pengembalian" value="` + data[0].fields.tanggal_pengembalian + `">
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Extend</button>
+                    </form>`)
+            }
+        );
+        var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        modal.show();
+    }
+    
+    function kembaliBuku(id, title){
+        $("#exampleModal").find(".modal-title").text("{{ peminjam.user.username }}"+" akan mengembalikan buku : " + title);
+        $("#exampleModal").find(".modal-title").css("color", "green");
+        $("#exampleModal").find(".modal-body").html(
+            `
+                <h2 style="margin-bottom:30px">Apakah Anda Yakin?<h2>
+                
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" onclick="kembalikan(${id})">Kembalikan</button>
+            `);
+        var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        modal.show();
+    }
+
+    function kembalikan(id){
+        fetch("{% url 'daftar_peminjam:kembali_buku' id=0 %}".replace('0', id)).then(
+            response => response
+        ).then(
+            data => {
+                if(data.status == 200){
+                    alert("Buku berhasil dikembalikan");
+                    updateDisplay();
+                } else{
+                    alert("Buku gagal dikembalikan");
+                }
+            }
+        );
+    }
+    
+    async function submitForm(event, id){
+        event.preventDefault();
+        const form = document.getElementById("formEdit");
+        const formData = new FormData(form);
+        var formUrl = "{% url 'daftar_peminjam:edit_peminjaman' id=0 %}";
+        formUrl = formUrl.replace('0', id);
+        const response = await fetch(formUrl, {
+            method: 'POST',
+            body: formData,
+        });
+        if(response.status==200){
+            alert("Data berhasil diubah");
+            updateDisplay();
+        } else{
+            alert("Data gagal diubah");
+        }
+    }
+
+    async function updateDisplay(formData){
+        $.ajax({
+        type: 'GET',  // or 'POST' if you want to use POST method
+        url: "{% url 'daftar_peminjam:search_buku' %}",  // replace with your server-side search endpoint
+        data: formData,
+        dataType: 'json',  // expected data type of the response
+        success: function(data) {
+            let temp = `
+            <table class="tableau" style="width:100%;">
+                <tr>
+                    <th>Cover</th>
+                    <th>Judul</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Extend</th>
+                    <th>Kembalikan</th>
+                </tr>`;
+
+            data.buku_dipinjam.forEach(function(buku){
+                temp += `
+                    <tr>
+                        <td><img src="${buku.image}" alt="Image"></td>
+                        <td><h5>${buku.title}</h5><p>${buku.author}</p></td>
+                        <td><p>${buku.deadline}</p></td>
+                        <td><p>${buku.status}</p></td>
+                        <td><button class='btn btn-dark-red' onclick='editData("${buku.peminjaman_id}", "${buku.title}")'>Extend Peminjaman</button></td>
+                        <td><button class='btn btn-dark-red' onclick='kembaliBuku("${buku.peminjaman_id}", "${buku.title}")'>Kembalikan Buku</button></td>
+                    </tr>`;
+            });
+
+            temp += '</table>';
+            document.getElementById("listBuku").innerHTML = temp;
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // Handle error
+            console.error("Search failed:", textStatus, errorThrown);
+        }
+        });
+    }
+
+    //awal2
+    updateDisplay({
+        'title': '',
+        'isbn': '',
+        'author': '',
+        'year': '',
+        'publisher': '',
+        'user_id': "{{ id }}",
+    });
+
+    $(document).ready(function() {
+    $('#book-search-form').submit(function(event) {
+        // Prevent the default form submit action
+        event.preventDefault();
+
+        // Collect the form data
+        let formData = {
+        'title': $('#example-search-input').val(),
+        'isbn': $('#isbn-search-input').val(),
+        'author': $('#author-search-input').val(),
+        'year': $('#publication-year-search-input').val(),
+        'publisher': $('#publisher-search-input').val(),
+        'user_id': $('#hidden_id').val(),
+        };
+        updateDisplay(formData);
+        
+    });
+    });
+</script>
+
+{% include 'footer.html' %}
+{% endblock %}
