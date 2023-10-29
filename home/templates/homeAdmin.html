@@ -65,7 +65,7 @@ https://templatemo.com/tm-579-cyborg-gaming
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
                         <li><a href="{% url 'home:show_home' %}" class="active">Home</a></li>
-                        <li><a href="browse.html">Books</a></li>
+                        <li><a href="{% url 'edit_info:show_editInfo' %}">Books</a></li>
                         <li><a href="details.html">Users</a></li>
                         <li><a href="{% url 'home:logout' %}">Logout</a></li>
                         <li><a href="profile.html">{{username}} <img src="{% static 'images/profile-header.jpg' %}" alt=""></a></li>
@@ -96,7 +96,7 @@ https://templatemo.com/tm-579-cyborg-gaming
                     <a href="">Manage User</a><!--TODO:Href-->
                   </div>
                   <div class="main-button">
-                    <a href="">Manage Book</a><!--TODO:Href-->
+                    <a href="{% url 'edit_info:show_editInfo' %}">Manage Book</a><!--TODO:Href-->
                   </div>
                 </div>
               </div>
