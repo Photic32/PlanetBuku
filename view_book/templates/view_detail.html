@@ -81,22 +81,33 @@
             </dl>
         </div>
         <div class="col-sm-2 mx-auto">
-            <button type="button" class="btn btn-primary" id="add-to-cart">Add to cart</button>
+            {% if book.stock == 0 %}
+                <button type="button" class="btn btn-secondary" disabled id="out-of-stock">Out of Stock</button>
+            {% else %}
+                <button type="button" class="btn btn-primary" id="add-to-cart">Add to cart</button>
+            {% endif %}
         </div>
     </div>
 </div>
 
 <div class="container">
     <div class="d-flex align-items-center">
-        <div class="user-rating d-inline">
-            <h2 class="d-inline">User Rating</h2>
-        </div>
-        {% if request.user.is_authenticated %}
-            {% if not has_reviewed %}
-                <button type="button" class="btn btn-outline-primary btn-sm" id="review-button" data-bs-toggle="modal" data-bs-target="#reviewModal" data-has-reviewed="{{ has_reviewed }}">Rate this book</button>
-            {% endif %}
-        {% endif %}
+        <div class="row">
+            <div class="col-sm-auto">
+                <div class="user-rating">
+                    <h2>User Rating</h2>
+                </div>
+            </div>
+            <div class="col-sm-auto">
+                {% if request.user.is_authenticated %}
+                    {% if not has_reviewed %}
+                        <button type="button" class="btn btn-outline-primary btn-sm" id="review-button" data-bs-toggle="modal" data-bs-target="#reviewModal" data-has-reviewed="{{ has_reviewed }}">Rate this book</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div> 
     </div>
+    <hr>
     <div class="user-reviews" data-book-id="{{ book.pk }}">
         <div id="user-reviews-card" class="card-container">
         </div>
@@ -114,40 +125,16 @@
                 <form id="form" method="POST" onsubmit="return false;">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="review" class="col-form-label">Review:</label>
-                        <textarea type="text" class="form-control" id="review" name="review" rows="8"></textarea>
+                        {{ review_form.review.label_tag }}<br>
+                        {{ review_form.review }}
+                        <!-- <label for="review" class="col-form-label">Review:</label>
+                        <textarea type="text" class="form-control" id="review" name="review" rows="8"></textarea> -->
                     </div>
                     <div class="mb-3">
-                        <label for="rate" class="col-form-label">Rate (0-5):</label>
-                        <input type="number" class="form-control" id="rate" name="rate"></input>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="button-give-review" data-bs-dismiss="modal">Give Review</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="editReviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Write your review</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="form" method="POST" onsubmit="return false;">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="review" class="col-form-label">Review:</label>
-                        <textarea type="text" class="form-control" id="review" name="review" rows="8"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="rate" class="col-form-label">Rate (0-5):</label>
-                        <input type="number" class="form-control" id="rate" name="rate"></input>
+                        {{ review_form.rate.label_tag }}
+                        {{ review_form.rate }}
+                        <!-- <label for="rate" class="col-form-label">Rate (0-5):</label>
+                        <input type="number" class="form-control" id="rate" name="rate"></input> -->
                     </div>
                 </form>
             </div>
@@ -173,15 +160,20 @@
         const reviews = rawReviews.reviews
         reviews.forEach((review) => {
             const reviewCard = document.createElement("div");
-            reviewCard.classList.add("review-card");
             reviewCard.innerHTML = ""
 
             const cardContent = `
-                <h5>${review.user}</h5>
-                <p style="mb-5">
-                    ${review.review_date}</p>
-                <p>${review.rate}/5</p>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <h5 class="mb-0">${review.user}</h5>
+                        <h6 class="text-secondary"><small>${review.review_date}</small></h6>
+                    </div>
+                    <div class="col-sm-7">
+                        <p class="lead"><mark>${review.rate}/5</mark></p>
+                    </div>
+                </div>
                 <p>${review.review}</p>
+                <hr>
             `;
 
             reviewCard.innerHTML += cardContent;
@@ -225,7 +217,7 @@
             successAlert.fadeOut(500, function() {
                 successAlert.hide();
             });
-        }, 1500);
+        }, 2000);
     }
 
     function addToCart() {
@@ -239,13 +231,15 @@
             if (response.status === 201) {
                 showAlert("Success! Book added to cart", "alert-success");
             } else if (response.status === 400) {
-                showAlert("Error adding item to cart.", "alert-danger");
+                response.text().then((errorMessage) => {
+                    showAlert(errorMessage, "alert-danger");
+                });
             }
         })
         .then(refreshReviews)
     }
 
-    const csrftoken = "{{ csrf_token }}";
+    var csrftoken = "{{ csrf_token }}";
 
     var authStatusDiv = document.getElementById("auth-status");
     var userIsAuthenticated = authStatusDiv.getAttribute("data-authenticated") === "true";
