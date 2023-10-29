@@ -1,6 +1,13 @@
 {% extends 'base.html' %} 
-
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/browse.css' %}">
+<link rel="stylesheet" href="{% static 'fontawesome.css' %}">
+<link rel="stylesheet" href="{% static 'templatemo-cyborg-gaming.css' %}">
+<link rel="stylesheet" href="{% static 'owl.css' %}">
+<link rel="stylesheet" href="{% static 'animate.css' %}">
+<link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+<link rel="stylesheet" href="{% static 'scrollbar.css' %}">
 {% include 'header.html' %}
 
 <div class="container">
@@ -32,7 +39,7 @@
                             <div class="col-lg-8">
                                 <a href="{% url 'view_book:single_book_view' book.pk %} " class="link-unstyled link-offset-2 link-underline link-underline-opacity-0 ">
                                 <h5>{{ book.title }}</h5>
-                                <p><strong>Author:</strong> {{ book.author }}</p>
+                                <p>{{ book.author }}</p>
                                 <p><strong>Publication Year:</strong> {{ book.publication_year }}</p>
                                 <p><strong>Stock:</strong> {{ book.stock }}</p>
                                 </a>

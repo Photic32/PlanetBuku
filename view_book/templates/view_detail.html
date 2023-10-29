@@ -1,6 +1,13 @@
 {% extends 'base.html' %} 
-
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/browse.css' %}">
+<link rel="stylesheet" href="{% static 'fontawesome.css' %}">
+<link rel="stylesheet" href="{% static 'templatemo-cyborg-gaming.css' %}">
+<link rel="stylesheet" href="{% static 'owl.css' %}">
+<link rel="stylesheet" href="{% static 'animate.css' %}">
+<link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+<link rel="stylesheet" href="{% static 'scrollbar.css' %}">
 {% include 'header.html' %}
 {% if user.is_authenticated %}
     <div id="auth-status" data-authenticated="true" style="display: none;"></div>
@@ -66,13 +73,12 @@
                             <div class="col-sm-auto">
                                 {% if request.user.is_authenticated %}
                                     {% if not has_reviewed %}
-                                        <button type="button" class="btn btn-outline-primary btn-sm" id="review-button" data-bs-toggle="modal" data-bs-target="#reviewModal" data-has-reviewed="{{ has_reviewed }}">Rate this book</button>
+                                        <button type="button" class="btn btn-outline-primary btn-sm custom-rate-color" id="review-button" data-bs-toggle="modal" data-bs-target="#reviewModal" data-has-reviewed="{{ has_reviewed }}">Rate this book</button>
                                     {% endif %}
                                 {% endif %}
                             </div>
                         </div> 
                     </div>
-                    <hr>
                     <div class="user-reviews" data-book-id="{{ book.pk }}">
                         <div id="user-reviews-card" class="card-container">
                         </div>
@@ -84,7 +90,7 @@
 </div>
 
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Write your review</h1>
@@ -105,7 +111,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="button-give-review" data-bs-dismiss="modal">Give Review</button>
+                <button type="button" class="btn btn-primary custom-button-color" id="button-give-review" data-bs-dismiss="modal">Give Review</button>
             </div>
         </div>
     </div>
@@ -125,6 +131,8 @@ const rawReviews = await getReview()
 const reviews = rawReviews.reviews
 reviews.forEach((review) => {
     const reviewCard = document.createElement("div");
+    reviewCard.classList.add("most-popular");
+    reviewCard.classList.add("mt-4");
     reviewCard.innerHTML = ""
 
     const cardContent = `
@@ -134,11 +142,10 @@ reviews.forEach((review) => {
                 <h6 class="text-secondary"><small>${review.review_date}</small></h6>
             </div>
             <div class="col-sm-7">
-                <p class="lead"><mark>${review.rate}/5</mark></p>
+                <p class="lead"><mark class="custom-mark-color">${review.rate}/5</mark></p>
             </div>
         </div>
-        <p>${review.review}</p>
-        <hr>
+        <p class="review-text">${review.review}</p>
     `;
 
     reviewCard.innerHTML += cardContent;

@@ -48,13 +48,13 @@
 #add-to-cart {
     background-color: #EA2C62;
     border-color: #EA2C62; 
-    color: #fff; 
+    color: #ffffff; 
 }
 
 #add-to-cart:hover {
     background-color: #ff0066; 
     border-color: #ff0066;
-    color: #fff;
+    color: #ffffff;
 }
 .book-details h5 {
     color: #EA2C62; 
@@ -71,4 +71,25 @@
 #back-button {
     color: #EA2C62; 
     text-decoration: none;
+}
+
+.custom-rate-color {
+    border-color: #EA2C62;
+    color: #EA2C62; 
+}
+
+.custom-button-color {
+    background-color: #EA2C62;
+    border-color: #ff0066;
+    color: #ffffff;
+}
+
+.custom-mark-color {
+    background-color: #fe5786;
+    color: #ffffff; 
+}
+
+.review-text {
+    font-size: 100%;
+    color: #d3d3d3; 
 }
