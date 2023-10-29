@@ -2,6 +2,8 @@
 
 Tugas Kelompok Tengah Semester PBP E05
 
+Deployed on : http://planetbuku-e05-tk.pbp.cs.ui.ac.id
+
 # Anggota Kelompok 👥
 
 1. Alma Laras Bestari (2206082303)
