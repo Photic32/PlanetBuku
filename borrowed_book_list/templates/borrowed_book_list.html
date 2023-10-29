@@ -9,10 +9,17 @@
     <style>
         /* CSS untuk kartu */
         .card-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust the card width as needed */
-        gap: 10px;
-        padding: 10px;
+            display: flex;
+            flex-direction: row;
+            grid-template-columns: 1fr; 
+            gap: 10px;
+            padding: 10px;
+            max-width: 1200px; 
+            margin: 0 auto;
+            /* grid-template-rows: 1fr; */
+            place-items: center; 
+            place-content: center;
+            text-decoration: none;
         }
         .card {
             border: 1px solid #cccccc;
@@ -21,10 +28,13 @@
             border-radius: 5px;
             box-shadow: 2px 2px 5px #190d7e;
             background-color: #aa5bb1;
+            word-wrap: break-word;
+            width: 665px;
+            
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 35px;
             text-align: center;
         }
 
@@ -36,98 +46,122 @@
         li {
             margin-bottom: 10px;
         }
+        body{
+            background-image:url('/static/blob-scene-haikei.svg');
+            background-size:cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            /* background-size: cover; */
+           
+        }
     </style>
 </head>
 <body>
-    <h1>Daftar Buku Dipinjam</h1>
+    <h1 style="background-color: #190d7e;color: white;border:#cccccc; border-radius: 20; padding: 10px;max-width: 665px; margin: 0 auto;" >Daftar Buku Dipinjam</h1>
     <div class="card-container">
         
-        <ul>
+        <ul id="listcard-dipinjam">
             {% for peminjaman in peminjaman_dipinjam %}
-                <li class="card">
-                    {{ peminjaman.buku.pk }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})
-                    <a href="{% url 'borrowed_book_list:return_book' book_id=peminjaman.pk %}"class="btn btn-link">Kembalikan buku</a>
-                </li>
+                <div class="card" style="text-align: center; font-weight:500; color: black; font-size: 25px;">
+                    <img src ="{{ peminjaman.buku.image_m }}">
+                    <li>{{ peminjaman.buku }} </li>
+                    <li>Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}</li>
+                    <li>Pengembalian: {{ peminjaman.tanggal_pengembalian }}</li>  
+                    <a href="{% url 'borrowed_book_list:return_book' book_id=peminjaman.pk %}"class="btn btn-link" style="border-color: #cccccc;background-color: #190d7e; color: white; font-size: 25px;">Kembalikan buku</a>
+                </div>
             {% empty %}
                 <li class="card">Tidak ada buku yang sedang dipinjam.</li>
             {% endfor %}
         </ul>
     </div>
 
-    <h1>Daftar Buku Dikembalikan</h1>
+    <h1 style="background-color: #190d7e;color: white;border:#cccccc; border-radius: 20; padding: 10px;max-width: 665px; margin: 0 auto;">Daftar Buku Dikembalikan</h1>
     <div class="card-container">
-        <ul>
-            {% for peminjaman in peminjaman_dikembalikan %}
-                <div id= "kembalikan" class="card">
-                    <img src ="{{ peminjaman.buku.image_m }}">
-                    <li>{{ peminjaman.buku }}</li>
-                    {{ peminjaman.buku }} (Tanggal Peminjaman: {{ peminjaman.tanggal_peminjaman }}, Tanggal Pengembalian: {{ peminjaman.tanggal_pengembalian }})
-                    <button type="button" onclick="showModal('{{ peminjaman.buku.pk }}')" class="btn btn-primary" >Kesan</button>
-                    <div class="ajax_card"></div>
-                </div>
-            {% empty %}
-                <li class="card">Tidak ada buku yang sudah dikembalikan.
-                </li>
-            {% endfor %}
+        <ul id="listcard-dikembalikan" style="text-align: center; font-weight:500; color: black; font-size: 25px;">
         </ul>
 
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="text-align: center;">✨Tambahkan Kesan✨</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content"style="background-color: #aa5bb1;">
+                <div class="modal-header" style="background-color: #190d7e;">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: white;">✨Tambahkan Kesan✨</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: white;"></button>
                 </div>
 
                 <div class="modal-body">
                     <div>
-                        <p>Terimakasih telah membaca buku ini dan telah mengembalikan buku ini dengan tepat waktu! Berikan kesan terbaikmu terhadap buku ini!</p>
+                        <p style="color: white; font-size: 20px;">Terimakasih telah membaca buku ini dan telah mengembalikan buku ini dengan tepat waktu! Berikan kesan terbaikmu terhadap buku ini!</p>
                     </div>
                     <form id="form" onsubmit="return false;">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label for="kesan" class="col-form-label">Kesan:</label>
-                            <textarea class="form-control" id="kesan" name="kesan"></textarea>
-                            <input type="hidden" id="input-hidden" name="book_id"></input>
+                            <label for="kesan" class="col-form-label" style="color: white;">Kesan:</label>
+                            <textarea class="form-control" id="kesan" name="kesan" style="background-color: #4732ff; color: white;"></textarea>
+                            <input type="hidden" id="input-hidden" name="book_id" ></input>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
                     <!-- <button type="button" onclick="showModal('{{ peminjam.pk }}')" class="btn btn-primary" >Tambahkan kesan</button> -->
-                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Tambahkan kesan</button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal" style="background-color: #190d7e;">Tambahkan kesan</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        async function getKesan() {
-            return fetch("{% url 'borrowed_book_list:get_kesan_json' %}").then((res) => res.json());
+        
+        async function getAll(){
+            fetch("{% url 'borrowed_book_list:borrowed_book_json'%}").then((res) => res.json()).then(
+                data => {
+                    
+                    // temp = ""
+                    // data.dipinjam.forEach(function(buku){
+                    //     console.log(buku);
+                    //     temp += `
+                    //     <div id="dipinjam" class="card">
+                    //         <img src ="${buku.image}">
+                    //         <li>${buku.title}</li>
+                    //         <li>${buku.author} </li>
+                    //         <li>Tanggal Pengembalian: ${buku.deadline})</li>
+                    //         <button type="button" onclick="showModal('${buku.buku_id}')" class="btn btn-primary" >Kesan</button>
+                    //         <div class="ajax_card" onload="getKesan('${buku.buku_id}')">
+                    //         <h4>Kesan : </h4>
+                    //         <p>${buku.kesan}</p>
+                    //         </div>
+                    //     </div>
+                    //     `
+                    // }
+                    // )
+                    // document.getElementById("listcard-dipinjam").innerHTML = temp;
+                    
+                    temp = ""
+                    data.dikembalikan.forEach(function(buku){
+                        console.log(buku.buku_id);
+                        temp += `
+                        <div id="dipinjam" class="card">
+                            <img src ="${buku.image}">
+                            <li>${buku.title}</li>
+                            <li>${buku.author} </li>
+                            <li>Tanggal Pengembalian: ${buku.deadline})</li>
+                            <div class="ajax_card" onload="getKesan('${buku.book_id}')">
+                            <h4>Kesan : </h4>
+                            <p style="background-color:white;">${buku.kesan}</p>
+                            <button type="button" onclick="showModal('${buku.book_id}')" class="btn btn-primary" style="font-size: 25px; background-color: #190d7e;">Kesan</button>
+                            </div>
+                        </div>
+                        `
+                    }
+                    );
+                    document.getElementById("listcard-dikembalikan").innerHTML = temp;
+                    
+                }
+            );
         }
-        async function refreshKesan() { 
-            const kesanContainer = document.getElementById("ajax_card");
-            kesanContainer.innerHTML = "";
-            // document.getElementById("kesan").innerHTML = ""
-            const kesan = await getKesan();
-            let htmlString = `<tr>
-                <th>Kesan</th>
-            </tr>`
-            kesan.forEach((item) => {
-                htmlString += `
-                <tr>
-                    <td>${item.fields.kesan}</td>
-                </tr>`;
-        });
-            
-            // document.getElementById("kembalikan").innerHTML = htmlString
-            kesanContainer.innerHTML = htmlString;
-        }
-    
-        refreshKesan();
-
+        getAll();    
         function showModal(id) {
             let modal = new bootstrap.Modal(document.getElementById("exampleModal"));
             modal.show();
@@ -136,11 +170,10 @@
         }
 
         function addKesan() {
-            const bookId = document.getElementById("input-hidden").value;
             fetch("{% url 'borrowed_book_list:add_kesan_ajax'  %}", {
                 method: "POST",
                 body: new FormData(document.querySelector('#form'))
-            }).then(refreshKesan)
+            }).then(getAll());
     
             document.getElementById("form").reset()
             return false
