@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.urls import reverse
 from book.models import Book
+from view_book.models import Review
 from home.models import Peminjaman, Keranjang, Peminjam
 from django.http import HttpResponse
 from django.core import serializers
@@ -16,6 +17,17 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
+def get_bukuReviews_json(request):
+    review = Review.objects.filter(pengguna=request.user)
+    bukuReview=[]
+    for review1 in review:
+        bukuReview.append(review.buku)
+    
+    return HttpResponse(serializers.serialize('json', bukuReview))
+
+def get_reviews_json(request):
+    reviews = Review.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', reviews))
 
 def get_bukuPeminjaman_json(request):
     peminjaman = Peminjaman.objects.filter(pengguna=request.user)
@@ -135,6 +147,23 @@ def submit_cart(request):
             newJumlahPeminjam = peminjam[0].jumlah_buku_dipinjam + 1
             peminjam.update(jumlah_buku_dipinjam=newJumlahPeminjam)
         
+            return HttpResponse(b"ADDED", status=201)
+        
+@csrf_exempt
+def remove_cart(request):
+    #handle keranjang
+    if request.method =='POST':
+        if request.POST.get('action') == 'cart_del':
+            token = request.POST.get('csrfmiddlewaretoken')
+            id=request.POST.get('id')
+            keranjang = Keranjang.objects.filter(user=request.user)
+            buku = Book.objects.filter(pk = id)
+            newStockBuku = buku[0].stock + 1
+            buku.update(stock=newStockBuku)
+            keranjang[0].book_list.remove(buku[0])
+            newJumlahKeranjang = keranjang[0].jumlah_buku - 1
+            keranjang.update(jumlah_buku=newJumlahKeranjang)
+
             return HttpResponse(b"ADDED", status=201)
         
     return HttpResponseNotFound()

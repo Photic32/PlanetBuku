@@ -195,6 +195,7 @@ https://templatemo.com/tm-579-cyborg-gaming
                 <li><h4>${bukuKeranjang[i].fields.title}</h4><span>${bukuKeranjang[i].fields.author}</span></li>
                 <li><h4>Stock</h4><span>${bukuKeranjang[i].fields.stock}</span></li>
                 <li><button class="main-button" value="${bukuKeranjang[i].pk}" id="submitCart">Borrow</button>/li>
+                <li><button class="main-button" value="${bukuKeranjang[i].pk}" id="removeCart">Remove</button>/li>
               </ul>
             </div>
           `
@@ -211,6 +212,22 @@ https://templatemo.com/tm-579-cyborg-gaming
       $.ajax({
         type: 'POST',
         url: '{% url "home:submit_cart" %}',
+        data: data,
+        cache: false,
+        processData: false,
+        contentType: false,
+        enctype: 'multipart/form-data',
+      }).then(refreshKeranjang())
+    })
+
+    $(document).on('click', '#removeCart', function(e) {
+      let data = new FormData()
+      data.append('action', 'cart_del')
+      data.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+      data.append('id', $(this).val())
+      $.ajax({
+        type: 'POST',
+        url: '{% url "home:remove_cart" %}',
         data: data,
         cache: false,
         processData: false,
