@@ -1,0 +1,64 @@
+.link-unstyled, .link-unstyled:link, .link-unstyled:hover {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.search-info {
+    margin: 0;
+}
+
+.small {
+    font-size: 10px;
+    color: #878787
+}
+
+.not-visible {
+    display: none;
+}
+
+.result-card {
+    width: 100%;
+    background-color: #fefefe;
+    box-shadow: 0 4px 4px 0 #cccaca;
+    transition: 0.5s;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0 auto;
+    z-index: 1000;
+}
+
+.desc-list-item dt{
+    float: left;
+    width: 50%;
+    padding: 0;
+    margin: 0;
+    display: table-row;
+}
+
+.desc-list-item dd{
+    float: left;
+    width: 50%;
+    padding: 0;
+    margin: 0;
+    display: table-row;
+}
+
+.desc-list {
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    display: table;
+}
+
+.review-card {
+    width: 100%;
+    max-width: 215px;
+    border: 1px solid #73beb0;
+    padding: 10px;
+    box-shadow: 2px 2px 5px rgba(207, 165, 196, 0.2);
+    border-radius: 5px;
+    background-color: #fff;
+    margin: 10px 5px 10px 0px;
+    word-wrap: break-word;
+}
