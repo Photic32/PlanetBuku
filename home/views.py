@@ -159,11 +159,12 @@ def submit_cart(request):
             newJumlahKeranjang = keranjang[0].jumlah_buku - 1
             keranjang.update(jumlah_buku=newJumlahKeranjang)
             #handle peminjaman
-            newPeminjaman=Peminjaman(pengguna=request.user, buku=buku, status='dipinjam')
-            temp = newPeminjaman.save()
+            newPeminjaman=Peminjaman(pengguna=request.user, buku=buku[0], status='dipinjam')
+            newPeminjaman.save()
+            temp = Peminjaman.objects.filter(pengguna=request.user, buku=buku[0], status='dipinjam')
             #handle peminjam
             peminjam = Peminjam.objects.filter(user=request.user)
-            peminjam[0].peminjaman_list.add(temp)
+            peminjam[0].book_list.add(temp[0])
             newJumlahPeminjam = peminjam[0].jumlah_buku_dipinjam + 1
             peminjam.update(jumlah_buku_dipinjam=newJumlahPeminjam)
         
