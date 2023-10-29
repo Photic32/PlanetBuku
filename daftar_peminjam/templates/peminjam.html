@@ -182,30 +182,44 @@
         );
     }
     
-    async function submitForm(event, id){
-        event.preventDefault();
-        const form = document.getElementById("formEdit");
-        const formData = new FormData(form);
-        var formUrl = "{% url 'daftar_peminjam:edit_peminjaman' id=0 %}";
-        formUrl = formUrl.replace('0', id);
-        const response = await fetch(formUrl, {
-            method: 'POST',
-            body: formData,
-        });
-        if(response.status==200){
+    // Make sure jQuery is included in your HTML before this script
+function submitForm(event, id){
+    event.preventDefault();
+    const form = $("#formEdit")[0];
+    const formData = new FormData(form);
+    var formUrl = "{% url 'daftar_peminjam:edit_peminjaman' id=0 %}";
+    formUrl = formUrl.replace('0', id);
+
+    $.ajax({
+        url: formUrl,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,  
+        success: function(response) {
             alert("Data berhasil diubah");
-            updateDisplay();
-        } else{
+            updateDisplay({
+                'title': '',
+                'isbn': '',
+                'author': '',
+                'year': '',
+                'publisher': '',
+                'user_id': "{{ id }}",
+            });
+        },
+        error: function(xhr, status, error) {
             alert("Data gagal diubah");
         }
-    }
+    });
+}
+
 
     async function updateDisplay(formData){
         $.ajax({
-        type: 'GET',  // or 'POST' if you want to use POST method
+        type: 'GET',  
         url: "{% url 'daftar_peminjam:search_buku' %}",  // replace with your server-side search endpoint
         data: formData,
-        dataType: 'json',  // expected data type of the response
+        dataType: 'json',  
         success: function(data) {
             let temp = `
             <table class="tableau" style="width:100%;">
@@ -222,12 +236,22 @@
                 temp += `
                     <tr>
                         <td><img src="${buku.image}" alt="Image"></td>
-                        <td><h5>${buku.title}</h5><p>${buku.author}</p></td>
+                        <td><h5><strong>${buku.title}</strong></h5><p>${buku.author}</p><p>${buku.isbn}<p></td>
                         <td><p>${buku.deadline}</p></td>
                         <td><p>${buku.status}</p></td>
+                        `
+                    if(buku.status == "dikembalikan"){
+                        temp += `
+                        <td><button class='btn btn-success' disabled>Buku Sudah Dikembalikan</button></td>
+                        <td><button class='btn btn-success' disabled>Buku Sudah Dikembalikan</button></td>
+                        `    
+                    } else{
+                        temp +=
+                    `
                         <td><button class='btn btn-dark-red' onclick='editData("${buku.peminjaman_id}", "${buku.title}")'>Extend Peminjaman</button></td>
                         <td><button class='btn btn-dark-red' onclick='kembaliBuku("${buku.peminjaman_id}", "${buku.title}")'>Kembalikan Buku</button></td>
                     </tr>`;
+                    }
             });
 
             temp += '</table>';
@@ -265,7 +289,6 @@
         'user_id': $('#hidden_id').val(),
         };
         updateDisplay(formData);
-        
     });
     });
 </script>
