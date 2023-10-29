@@ -75,14 +75,14 @@ def serialize_peminjam_individu(peminjaman_dipinjam, peminjaman_dikembalikan):
 
 def return_book(request, book_id):
     # Retrieve the book object by its ID.
-    book = get_object_or_404(Book, pk=book_id)
+    peminjaman = get_object_or_404(Peminjaman, pk=book_id)
 
     # Check if the book is currently marked as "dipinjam."
-    if book.status == 'dipinjam':
+    if peminjaman.status == 'dipinjam':
         # Update the status to "dikembalikan."
-        book.status = 'dikembalikan'
-        book.save()
-        return HttpResponse("Book marked as returned successfully.")
+        peminjaman.status = 'dikembalikan'
+        peminjaman.save()
+        # return HttpResponse("Book marked as returned successfully.")
     return HttpResponseRedirect(reverse('borrowed_book_list:borrowed_book_list'))
 
 @csrf_exempt
