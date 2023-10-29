@@ -11,10 +11,11 @@ def in_seven_days():
 class Peminjaman(models.Model): # App 5
     pengguna = models.ForeignKey(User, on_delete=models.CASCADE)
     tanggal_peminjaman = models.DateField(auto_now_add=True)
-    tanggal_pengembalian = models.DateField(null=True, blank=True)
+    tanggal_pengembalian = models.DateField(in_seven_days, default=in_seven_days)
     buku = models.ForeignKey(Book, on_delete=models.CASCADE)
     status = models.CharField(max_length=255, choices=[('dipinjam', 'Dipinjam'), ('dikembalikan', 'Dikembalikan')])
-
+    def in_seven_days():
+        return timezone.now() + timedelta(days=7)
 class KesanPeminjam(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     kesan = models.TextField()
