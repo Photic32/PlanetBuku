@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Peminjam : {{ username}}{% endblock %}
+{% block content %}
+
+{% include 'header.html' %}
+
+<style>
+body {
+    background-color: #1e1e1e;
+    font-family: Arial, sans-serif;
+    color: #d4d4d4;
+    }
+
+.tableau {
+    background-color: #292929;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    overflow: hidden;
+}
+
+.tableau th, .tableau td {
+    border: none;
+    padding: 15px 20px;
+}
+
+.tableau th {
+    color: #888;
+}
+
+.tableau img {
+    width: 130%;
+    height: 130%;
+    border-radius: 10px;
+}
+
+.btn-dark-red {
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 15px;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.btn-dark-red:hover {
+    background-color: #c0392b;
+}
+
+</style>
+
+<!--  bagian atas -->
+<div class="container p-5">
+    <h1 class="text-center">
+        Daftar Peminjam Buku
+    </h1>
+    <h5 class="text-center">Sekarang ada {{jumlah_peminjam}} Peminjam Terdaftar</h5>
+</div>
+<!--  tabel -->
+<div  class="mx-auto" style="width: 90%">
+<table class="tableau" style="width: 100%" id="tabel-user">
+    
+
+</table>
+</div>
+  
+<script>
+    function updateDisplay(){
+       fetch("{% url 'daftar_peminjam:get_all_user_json' %}").then(
+        response => response.json()
+       ).then(
+        data => {
+            var i = 1;
+            var isiTable = 
+            `<tr>
+                <th>No</th>
+                <th>Username</th>
+                <th>Jumlah Buku Dipinjam</th>
+
+                <th>Aksi</th>
+            </tr>`;
+            data.forEach(function(user){
+                isiTable += "<tr>";
+                isiTable += "<td>" + i + "</td>";
+                isiTable += "<td>" + user.username + "</td>";
+                isiTable += "<td>" + user.jumlah_buku_dipinjam + "</td>";
+                
+                url = "{% url 'daftar_peminjam:show_peminjam_individu' id=0 %}".replace('0', user.user_id);
+                isiTable += `<td><a href="${url}" target="_blank">
+                    <button class='btn-dark-red' >Lihat/Edit Buku Dipinjam</button>
+                    </a></td>`;
+                isiTable += "</tr>"
+                i++;
+            });
+            document.getElementById("tabel-user").innerHTML = isiTable;
+        }
+       );
+    }
+    updateDisplay();
+
+</script>
+
+{% include 'footer.html' %}
+{% endblock %}
