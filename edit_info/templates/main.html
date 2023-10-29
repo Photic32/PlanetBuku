@@ -1,0 +1,342 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Edit Informasi Buku</title>
+        <style>
+            #ajax_cards {
+                max-width: 1200px; 
+                margin: 0 auto;
+                padding: 20px;
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr;
+                place-items: center; 
+                place-content: center;
+                gap: 20px;
+                text-decoration: none;
+                box-shadow: 0px 0.18px 1.5px 1.5px rgb(143, 143, 143);
+                
+            }
+            #ajax_cards {
+                text-align: left;
+                align-items: center;
+                align-self: center;
+            }
+            #button_add {
+                text-align: center;
+            }
+            .book-card {
+                display: grid;
+                grid-template-columns: 1fr 2fr;
+                grid-template-rows: 1fr;   
+                overflow: hidden;
+
+            }
+            .image {
+                display: block;
+                width: 100%;
+                object-fit: cover;
+                height: 100%;
+            }
+            .title {
+                font-size: 1.125rem;
+                line-height: 1.4;
+                color: black;
+                font-weight: 700;
+                margin: 0 0 0.5rem 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 200px; 
+            }
+            .author {
+                font-size: 0.875rem;
+                line-height: 1;
+                margin: 1rem 0 0 0;
+                padding: 1rem 0 0 0;
+                border-top: 0.0625rem solid grey;
+                color: rgb(65, 65, 65);
+            }      
+            .publication_year{
+                font-size: 0.9rem;
+                line-height: 1;
+                margin: 1rem 0 0 0;
+                padding: 1rem 0 0 0;
+                border-top: 0.0625rem solid grey;     
+                color: rgb(65, 65, 65);
+            }  
+            .stock{
+                font-size: 1.1rem;
+                line-height: 1;
+                color: black;
+                text-decoration: none;
+                margin: 1rem 0 0 0;
+                padding: 0.7rem 0 0.7rem 0;            
+            }
+            .article-details {
+                padding: 0.8rem;
+                text-decoration: none;
+            } 
+            body {
+                flex-direction: column;
+                justify-content: center;
+                justify-items: center;
+                align-items:center;
+                place-items: center;
+                place-content: center;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        {% include 'header.html' %}
+
+        <br>
+        <h2 class="line" style="text-align: center;">Edit Page</h2>
+        
+        <br>
+        <div style="text-align: center;">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add New Book</button>
+        </div>
+        <br>
+        <br>
+        
+        <div id="ajax_cards" ></div>
+
+        <!-- Membuat modal untuk tampilan add Product -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Book</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form1" onsubmit="return false;">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="title" class="col-form-label">Title:</label>
+                                <input type="text" class="form-control" id="title" name="title"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="author" class="col-form-label">Author:</label>
+                                <input type="text" class="form-control" id="author" name="author"></input>
+                            </div>                        
+                            <div class="mb-3">
+                                <label for="publication_year" class="col-form-label">Publication Year:</label>
+                                <input type="number" class="form-control" id="publication_year" name="publication_year"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="publisher" class="col-form-label">Publisher:</label>
+                                <input type="text" class="form-control" id="publisher" name="publisher"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="isbn" class="col-form-label">isbn:</label>
+                                <input type="text" class="form-control" id="isbn" name="isbn"></input>
+                            </div>                                                                   
+                            <div class="mb-3">
+                                <label for="image_s" class="col-form-label">Image s path:</label>
+                                <input type="text" class="form-control" id="image_s" name="image_s"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image_m" class="col-form-label">Image m path:</label>
+                                <input type="text" class="form-control" id="image_m" name="image_m"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image_l" class="col-form-label">Image l path:</label>
+                                <input type="text" class="form-control" id="image_l" name="image_l"></input>
+                            </div>                        
+                            <div class="mb-3">
+                                <label for="stock" class="col-form-label">Stock:</label>
+                                <input type="number" class="form-control" id="stock" name="stock"></input>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Book</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Membuat modal untuk tampilan edit Product -->
+        <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModal2Label">Edit Book Info</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include 'footer.html' %}
+            
+        <script>
+            let latest_books;
+            async function getBooks() {
+                return fetch("{% url 'edit_info:get_books_json' %}").then((res) => res.json())
+            }
+
+            async function refreshBooks() {
+                const bookCards = document.getElementById("ajax_cards");
+                bookCards.innerHTML = "";
+
+                const books = await getBooks(); // Ambil data buku yang terbaru dari server
+                
+                latest_books = books;
+                let cardRow = null;
+
+                books.forEach((book, index) => {
+                    if (index % 3 === 0) {  // Mengubah dari 4 menjadi 3
+                        cardRow = document.createElement("div");
+                        cardRow.classList.add("row");
+                    }
+
+                    const card = document.createElement("div");
+                    card.classList.add("card", "col-md-4", "mb-3");  // Mengubah dari 3 menjadi 4
+                    card.setAttribute('data-product-id', book.id);
+                    card.innerHTML = `
+                        <article class="book-card">
+                            <img class="image" src=${book.fields.image_s} alt="Book Image">
+                            <div class="article-details">
+                                <h3 class="title">${book.fields.title}</h3>
+                                <h4 class="author">${book.fields.author}</h4>
+                                <h5 class="publication_year">${book.fields.publication_year}</h5>
+                                <div class="stock">
+                                    <a type="button" style="border: none; text-decoration: none; color: black; background-color: lightgrey; border-radius: 5px;" href="decrement_stock/${book.pk}"> - </a>
+                                    <a class="stock" style="background-color: lightgrey;">. ${book.fields.stock} .</a>
+                                    <a type="button" style="border: none; text-decoration: none; color: black; background-color: lightgrey; border-radius: 5px;" href="increment_stock/${book.pk}"> + </a>
+                                </div>
+                                <br>
+                                <button class="btn btn-danger" onclick="deleteBook(${book.pk})">Delete</button>
+                                <button id="edit_button" class="btn btn-primary"  onclick="showModalEdit(${book.pk})" >Edit</button>
+
+                            </div>
+                        </article>
+                    `;
+
+                    cardRow.appendChild(card);
+                    bookCards.appendChild(cardRow);
+                });
+            }
+            refreshBooks();
+
+            async function showModalEdit(id){
+                const book = latest_books.find((book) => book.pk == id);
+                console.log(book.fields.title);
+                $("#exampleModal2").find(".modal-title").text("   INI TITLE      ");
+                $("#exampleModal2").find(".modal-body").html(
+                    `
+                    <form id="form2" onsubmit="return false;">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="title" class="col-form-label">Title:</label>
+                                <input type="text" class="form-control" id="title_edit" name="title" value="${book.fields.title}"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="author" class="col-form-label">Author:</label>
+                                <input type="text" class="form-control" id="author_edit" name="author" value="${book.fields.author}"></input>
+                            </div>                        
+                            <div class="mb-3">
+                                <label for="publication_year" class="col-form-label">Publication Year:</label>
+                                <input type="number" class="form-control" id="publication_year_edit" name="publication_year" value="${book.fields.publication_year}"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="publisher" class="col-form-label">Publisher:</label>
+                                <input type="text" class="form-control" id="publisher_edit" name="publisher" value="${book.fields.publisher}"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="isbn" class="col-form-label">isbn:</label>
+                                <input type="text" class="form-control" id="isbn_edit" name="isbn" value="${book.fields.isbn}"></input>
+                            </div>                                                                   
+                            <div class="mb-3">
+                                <label for="image_s" class="col-form-label">Image s path:</label>
+                                <input type="text" class="form-control" id="image_s_edit" name="image_s" value="${book.fields.image_s}"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image_m" class="col-form-label">Image m path:</label>
+                                <input type="text" class="form-control" id="image_m_edit" name="image_m" value=value="${book.fields.image_m}"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image_l" class="col-form-label">Image l path:</label>
+                                <input type="text" class="form-control" id="image_l_edit" name="image_l" value="${book.fields.image_l}"></input>
+                            </div>                        
+                            <div class="mb-3">
+                                <label for="stock" class="col-form-label">Stock:</label>
+                                <input type="number" class="form-control" id="stock_edit" name="stock" value="${book.fields.stock}"></input>
+                            </div>
+                            
+                        <button type="button" class="btn btn-primary" id="button_edit" data-bs-dismiss="modal" onclick="editBook(${id})">Save Changes</button>
+                        </form>         
+                `);
+                var modal = new bootstrap.Modal(document.getElementById("exampleModal2"), {});
+                modal.show();
+
+            }
+
+            async function deleteBook(id) {
+                const response = await fetch(`{% url 'edit_info:delete_book_ajax' 0 %}`.replace("0", id), {
+                    method: "POST",
+                });
+
+                if (response.status === 200) {
+                    refreshBooks();
+                } else if (response.status === 404) {
+                    console.log("Buku tidak ada");
+                } else {
+                    console.log("Error deleting book");
+                }
+            }
+
+            async function editBook(id) {
+                fetch(`{% url 'edit_info:edit_book' 0 %}`.replace("0", id), {
+                    method: "POST",
+                    body: new FormData(document.querySelector('#form2'))
+                }).then(refreshBooks)
+
+                document.getElementById("form2").reset()
+                return false
+            }
+
+            function addBook() {
+                fetch("{% url 'edit_info:add_book_ajax' %}", {
+                    method: "POST",
+                    body: new FormData(document.querySelector('#form1'))
+                }).then(refreshBooks)
+
+                document.getElementById("form1").reset()
+                return false
+            }
+
+            document.getElementById("button_add").addEventListener("click", function() {
+                addBook();
+            });
+
+            const publicationYearInput = document.getElementById("publication_year");
+            const publicationYearValue = publicationYearInput.value;
+
+            if (!isNaN(publicationYearValue)) {
+            } else {
+                alert("Publication Year harus berupa angka.");
+            }
+            
+        </script>
+    </body>
+    </html>
+
+{% endblock %}

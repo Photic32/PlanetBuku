@@ -1,0 +1,95 @@
+.link-unstyled, .link-unstyled:link, .link-unstyled:hover {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.search-info {
+    margin: 0;
+    color: #ffffff;
+}
+
+.small {
+    font-size: 10px;
+    color: #343a40
+}
+
+.not-visible {
+    display: none;
+}
+
+.result-card {
+    width: 100%;
+    background-color: #2f3234;
+    box-shadow: 0 4px 4px 0 #1d1c1f;
+    transition: 0.5s;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0 auto;
+    z-index: 1000;
+}
+
+/* bunch of bootstrap color change or just color change really*/
+.pagination.dark-theme .page-link {
+    background-color: #343a40;
+    color: #ffffff;
+    border-color: #343a40;
+}
+
+.pagination.dark-theme .page-item.active .page-link {
+    background-color: #EA2C62;
+    border-color: #EA2C62;
+}
+
+.pagination.dark-theme .page-item.disabled .page-link {
+    background-color: #343a40;
+    color: #6c757d;
+}
+
+#add-to-cart {
+    background-color: #EA2C62;
+    border-color: #EA2C62; 
+    color: #ffffff; 
+}
+
+#add-to-cart:hover {
+    background-color: #ff0066; 
+    border-color: #ff0066;
+    color: #ffffff;
+}
+.book-details h5 {
+    color: #EA2C62; 
+}
+
+.desc-list dt {
+    color: #c9c8c8; 
+}
+
+.desc-list dd {
+    color: #979090;
+}
+
+#back-button {
+    color: #EA2C62; 
+    text-decoration: none;
+}
+
+.custom-rate-color {
+    border-color: #EA2C62;
+    color: #EA2C62; 
+}
+
+.custom-button-color {
+    background-color: #EA2C62;
+    border-color: #ff0066;
+    color: #ffffff;
+}
+
+.custom-mark-color {
+    background-color: #fe5786;
+    color: #ffffff; 
+}
+
+.review-text {
+    font-size: 100%;
+    color: #d3d3d3; 
+}

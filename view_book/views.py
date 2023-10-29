@@ -1,20 +1,20 @@
-from typing import Any
-from django.db.models.query import QuerySet
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from book.models import Book
+from view_book.forms import ReviewForm
 from view_book.models import Review
 from home.models import Keranjang
 from django.views.decorators.csrf import csrf_exempt
-from django.core import serializers
 
 class ViewBooks(ListView):
     paginate_by = 15
     model = Book
     template_name = 'view_books.html'
     context_object_name = 'books'
-    queryset = Book.objects.all()
+
+    def get_queryset(self):
+        return Book.objects.order_by('id')
 
 class ViewBook(DetailView):
     model = Book
@@ -29,6 +29,7 @@ class ViewBook(DetailView):
             book = context['book']
             has_reviewed = Review.objects.filter(book=book, user=user).exists()
             context['has_reviewed'] = has_reviewed
+            context['review_form'] = ReviewForm()
         else:
             context['has_reviewed'] = False
 
@@ -42,7 +43,7 @@ class BookSearchView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q')
-        return Book.objects.filter(title__icontains=query)
+        return Book.objects.filter(title__icontains=query).order_by('id')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -54,17 +55,22 @@ def add_to_cart_ajax(request, book_pk):
         user = request.user
         keranjang = get_object_or_404(Keranjang, user=user)
         book = Book.objects.filter(pk=book_pk).first()
-        keranjang.book_list.add(book)
+        if book in keranjang.book_list.all():
+            return HttpResponseBadRequest("You have added book this to your cart")
+        else:
+            keranjang.book_list.add(book)
+            keranjang.jumlah_buku = keranjang.book_list.count()
+            keranjang.save()
+            return HttpResponse(status=201)
 
-        keranjang.jumlah_buku = keranjang.book_list.count()
-        keranjang.save()
-        return HttpResponse(status=201)
-    
     return HttpResponseNotFound()
 
 def get_review_json(request, book_pk):
     reviews_by_book = Review.objects.filter(book__pk=book_pk)
-    data = [{'user': review.user.username, 'review': review.review, 'rate': review.rate, 'review_date': review.review_date} for review in reviews_by_book]
+    data = [{
+        'user': review.user.username,
+        'review': review.review, 'rate': review.rate,
+        'review_date': review.review_date} for review in reviews_by_book]
     return JsonResponse({'reviews': data})
 
 @csrf_exempt
