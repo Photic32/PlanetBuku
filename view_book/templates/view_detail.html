@@ -1,44 +1,9 @@
 {% extends 'base.html' %} 
 
 {% block content %}
-<style>
-.desc-list-item dt{
-    float: left;
-    width: 50%;
-    padding: 0;
-    margin: 0;
-    display: table-row;
-}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/browse.css' %}">
 
-.desc-list-item dd{
-    float: left;
-    width: 50%;
-    padding: 0;
-    margin: 0;
-    display: table-row;
-}
-
-.desc-list {
-    width: 100%;
-    overflow: hidden;
-    padding: 0;
-    margin: 0;
-    display: table;
-}
-
-.review-card {
-    width: 100%;
-    max-width: 215px;
-    border: 1px solid #73beb0;
-    padding: 10px;
-    box-shadow: 2px 2px 5px rgba(207, 165, 196, 0.2);
-    border-radius: 5px;
-    background-color: #fff;
-    margin: 10px 5px 10px 0px;
-    word-wrap: break-word;
-}
-
-</style>
 {% include 'header.html' %}
 {% if user.is_authenticated %}
     <div id="auth-status" data-authenticated="true" style="display: none;"></div>
