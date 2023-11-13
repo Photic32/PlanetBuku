@@ -21,7 +21,7 @@ def show_editInfo(request):
         'books': books
     }
 
-    return render(request, "main.html", context)
+    return render(request, "button.html", context)
 
 def delete_book(request, id):
     # Dapatkan data buku berdasarkan ID
