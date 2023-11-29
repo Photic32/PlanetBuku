@@ -13,7 +13,7 @@ def get_books_json(request):
     data = Book.objects.filter()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
-# @staff_member_required
+@staff_member_required
 def show_editInfo(request):
     books = Book.objects.all()
 
