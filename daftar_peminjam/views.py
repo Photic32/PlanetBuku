@@ -11,8 +11,7 @@ from datetime import datetime
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_GET, require_POST
 
-
-
+#
 def serialize_semua_peminjam(semua_user):
     res = []
     for peminjam in semua_user:
@@ -27,16 +26,19 @@ def serialize_semua_peminjam(semua_user):
 
 #main.html
 @staff_member_required
+@csrf_exempt
 def get_all_user_json(request):
     semua_user = Peminjam.objects.all()
     return HttpResponse(serialize_semua_peminjam(semua_user))
 
 #peminjam.html
 @staff_member_required
+@csrf_exempt
 def get_pinjaman_json(request, id):
     pinjaman = Peminjaman.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", pinjaman))
 
+@csrf_exempt
 @staff_member_required
 def show_peminjam_individu(request, id):    
     context = {
@@ -46,6 +48,7 @@ def show_peminjam_individu(request, id):
     }
     return render(request, "peminjam.html", context=context)
 
+@csrf_exempt
 @staff_member_required
 def show_page(request):
     semua_user = Peminjam.objects.all()
@@ -75,7 +78,8 @@ def edit_peminjaman(request, id):
         return HttpResponse("Peminjam Edited Successfully")
     else:
         return HttpResponseBadRequest("Invalid Input")
-    
+
+@csrf_exempt
 @staff_member_required
 def kembali_buku(request, id):
     # Get berdasarkan ID
@@ -85,31 +89,19 @@ def kembali_buku(request, id):
     return HttpResponse("Buku berhasil dikembalikan")  
 
 @staff_member_required
+@csrf_exempt
 @require_GET
 def search_buku(request):
     if request.method == "GET":
         user_id = request.GET.get("user_id")
-        title = request.GET.get("title")
-        author = request.GET.get("author")
-        isbn = request.GET.get("isbn")
-        year = request.GET.get("year")
-        publisher = request.GET.get("publisher")
-        
-
-        request.session['last_search'] = {
-            'title': title,
-            'author': author,
-            'isbn': isbn,
-            'year': year,
-            'publisher': publisher
-        }
+        query = request.GET.get("query")
         
         hasil = Book.objects.filter(
-            Q(title__icontains=title) & 
-            Q(author__icontains=author) & 
-            Q(isbn__icontains=isbn) & 
-            Q(publication_year__icontains=year) & 
-            Q(publisher__icontains=publisher)
+            Q(title__icontains=query) |
+            Q(author__icontains=query) | 
+            Q(isbn__icontains=query) |
+            Q(publication_year__icontains=query) | 
+            Q(publisher__icontains=query)
         )
         pinjaman_List = []
         list_pinjaman = Peminjam.objects.get(pk=user_id).book_list.all()
