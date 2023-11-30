@@ -9,7 +9,7 @@
         <title>Edit Informasi Buku</title>
         <style>
             #ajax_cards {
-                max-width: 1200px; 
+                max-width: 1300px; 
                 margin: 0 auto;
                 padding: 20px;
                 display: grid;
@@ -19,7 +19,8 @@
                 place-content: center;
                 gap: 20px;
                 text-decoration: none;
-                box-shadow: 0px 0.18px 1.5px 1.5px rgb(143, 143, 143);
+                background-color: rgb(217, 214, 231);
+                border-radius: 10px;
                 
             }
             #ajax_cards {
@@ -35,7 +36,7 @@
                 grid-template-columns: 1fr 2fr;
                 grid-template-rows: 1fr;   
                 overflow: hidden;
-
+                max-height:min-content;
             }
             .image {
                 display: block;
@@ -89,16 +90,23 @@
                 align-items:center;
                 place-items: center;
                 place-content: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
             }
 
         </style>
+        
+        {%load static%}
+        <link rel="stylesheet" href="{% static 'templatemo-cyborg-gaming.css' %}">
+
     </head>
 
-    <body>
+    <body style="background-image: url('static/blob-scene-haikei.svg'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
         {% include 'header.html' %}
 
         <br>
-        <h2 class="line" style="text-align: center;">Edit Page</h2>
+        <h1 class="line" style="text-align: center; color: white;">Edit Page</h1>
         
         <br>
         <div style="text-align: center;">
@@ -212,15 +220,15 @@
                     card.setAttribute('data-product-id', book.id);
                     card.innerHTML = `
                         <article class="book-card">
-                            <img class="image" src=${book.fields.image_s} alt="Book Image">
+                            <img class="image" src=${book.fields.image_l} alt="Book Image">
                             <div class="article-details">
                                 <h3 class="title">${book.fields.title}</h3>
                                 <h4 class="author">${book.fields.author}</h4>
                                 <h5 class="publication_year">${book.fields.publication_year}</h5>
                                 <div class="stock">
-                                    <a type="button" style="border: none; text-decoration: none; color: black; background-color: lightgrey; border-radius: 5px;" href="decrement_stock/${book.pk}"> - </a>
+                                    <a class="btn btn-primary" type="button" style="border: none; text-decoration: none; color: black; background-color: lightgrey; border-radius: 5px;" href="decrement_stock/${book.pk}"> - </a>
                                     <a class="stock" style="background-color: lightgrey;">. ${book.fields.stock} .</a>
-                                    <a type="button" style="border: none; text-decoration: none; color: black; background-color: lightgrey; border-radius: 5px;" href="increment_stock/${book.pk}"> + </a>
+                                    <a class="btn btn-primary" type="button" style="border: none; text-decoration: none; color: black; background-color: lightgrey; border-radius: 5px;" href="increment_stock/${book.pk}"> + </a>
                                 </div>
                                 <br>
                                 <button class="btn btn-danger" onclick="deleteBook(${book.pk})">Delete</button>
@@ -336,6 +344,7 @@
             }
             
         </script>
+        
     </body>
     </html>
 
