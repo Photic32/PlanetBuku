@@ -26,5 +26,7 @@ urlpatterns = [
     path("borrowed_book_list/", include("borrowed_book_list.urls")),
     path("browse/", include("view_book.urls")),
     path("adminbook/", include("edit_info.urls")),
-    path("adminusers/", include("daftar_peminjam.urls"))
+    path("adminusers/", include("daftar_peminjam.urls")),
+    path('auth/', include('authentication.urls')),
 ]
+
