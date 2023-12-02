@@ -8,3 +8,4 @@ django-widget-tweaks
 pillow
 django-environ
 django-cors-headers
+dj_database_url
