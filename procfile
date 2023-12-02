@@ -1,2 +1,2 @@
 release: django-admin migrate --noinput
-web: gunicorn Planet_Buku.wsgi --log-file -
+web: python manage.py collectstatic --no-input; gunicorn Planet_Buku.wsgi --log-file -
