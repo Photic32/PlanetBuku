@@ -19,6 +19,7 @@ def login(request):
                     "status": True,
                     "message": "Login Admin sukses!",
                     "is_staff":True,
+                    "staff_id":user.pk,
                     # Tambahkan data lainnya jika ingin mengirim data ke Flutter.
                 }, status=200)
             else:
@@ -27,6 +28,7 @@ def login(request):
                     "status": True,
                     "message": "Login User sukses!",
                     "is_staff": False,
+                    "user_id": user.pk,
                     # Tambahkan data lainnya jika ingin mengirim data ke Flutter.
                 }, status=200)
         else:
