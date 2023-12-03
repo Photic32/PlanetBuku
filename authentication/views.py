@@ -12,6 +12,7 @@ def login(request):
     if user is not None:
         if user.is_active:
             auth_login(request, user)
+            print("halo")
             # Status login sukses.
             if(user.is_staff == True):
                 return JsonResponse({
@@ -20,6 +21,18 @@ def login(request):
                     "message": "Login Admin sukses!",
                     "is_staff":True,
                     "staff_id":user.pk,
+                    "user": {"id": user.pk,
+                             "password": user.password,
+                             "last_login": user.last_login,
+                             "is_superuser": user.is_superuser,
+                             "username": user.username,
+                             "last_name": user.last_name,
+                             "email": user.email,
+                             "is_staff": user.is_staff,
+                             "is_active": user.is_active,
+                             "date_joined": user.date_joined,
+                             "first_name": user.first_name,
+                    }
                     # Tambahkan data lainnya jika ingin mengirim data ke Flutter.
                 }, status=200)
             else:
@@ -29,6 +42,18 @@ def login(request):
                     "message": "Login User sukses!",
                     "is_staff": False,
                     "user_id": user.pk,
+                    "user": {"id": user.pk,
+                             "password": user.password,
+                             "last_login": user.last_login,
+                             "is_superuser": user.is_superuser,
+                             "username": user.username,
+                             "last_name": user.last_name,
+                             "email": user.email,
+                             "is_staff": user.is_staff,
+                             "is_active": user.is_active,
+                             "date_joined": user.date_joined,
+                             "first_name": user.first_name,
+                    }
                     # Tambahkan data lainnya jika ingin mengirim data ke Flutter.
                 }, status=200)
         else:
@@ -45,6 +70,7 @@ def login(request):
     
 @csrf_exempt
 def logout(request):
+    print(request.user.username)
     username = request.user.username
 
     try:
