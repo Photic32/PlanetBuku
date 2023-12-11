@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
 
 @csrf_exempt
 def login(request):
@@ -11,10 +12,9 @@ def login(request):
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
-            auth_login(request, user)
-            print("halo")
             # Status login sukses.
             if(user.is_staff == True):
+                auth_login(request, user)
                 return JsonResponse({
                     "username": user.username,
                     "status": True,
@@ -36,6 +36,7 @@ def login(request):
                     # Tambahkan data lainnya jika ingin mengirim data ke Flutter.
                 }, status=200)
             else:
+                auth_login(request, user)
                 return JsonResponse({
                     "username": user.username,
                     "status": True,
@@ -79,6 +80,20 @@ def logout(request):
             "username": username,
             "status": True,
             "message": "Logout berhasil!"
+        }, status=200)
+    except:
+        return JsonResponse({
+        "status": False,
+        "message": "Logout gagal."
+        }, status=401)
+    
+@csrf_exempt
+#@login_required(login_url='/accounts/login/')
+def tes(request):
+    try:
+        return JsonResponse({
+            "status": True,
+            "message": "YAYYYYY!"
         }, status=200)
     except:
         return JsonResponse({

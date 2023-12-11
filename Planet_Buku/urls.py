@@ -28,5 +28,6 @@ urlpatterns = [
     path("adminbook/", include("edit_info.urls")),
     path("adminusers/", include("daftar_peminjam.urls")),
     path('auth/', include('authentication.urls')),
+    path('accounts/login/', admin.site.urls),
 ]
 
