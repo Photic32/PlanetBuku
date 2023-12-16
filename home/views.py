@@ -281,9 +281,11 @@ def remove_cart(request):
 def handle_cart_flutter(request):
     #handle keranjang
     if request.method =='POST':
-        user = request.POST.get("idUser")
-        book = request.POST.get("bookId")
-        action = request.POST.get("action")
+        data = json.loads(request.body)
+        print(data)
+        user = data["idUser"]
+        book = data["bookId"]
+        action = data["action"]
         if action == "Borrow":
             keranjang = Keranjang.objects.filter(user=user)
             buku = Book.objects.filter(pk = book)
