@@ -282,9 +282,8 @@ def handle_cart_flutter(request):
     #handle keranjang
     if request.method =='POST':
         data = json.loads(request.body)
-        print(data)
-        user = data["idUser"]
-        book = data["bookId"]
+        user = int(data["idUser"])
+        book = int(data["bookId"])
         action = data["action"]
         if action == "Borrow":
             keranjang = Keranjang.objects.filter(user=user)
