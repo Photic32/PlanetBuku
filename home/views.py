@@ -145,7 +145,7 @@ def getBukuKeranjang_json(request):
     bukuKeranjang = keranjang.book_list.all()
     return HttpResponse(serializers.serialize('json', bukuKeranjang))
 
-def getBukuKeranjangById_json(request, id):
+def getBukuKeranjangFlutter_json(request, id):
     keranjang = Keranjang.objects.filter(user=id)[0]
     bukuKeranjang = keranjang.book_list.all()
     return HttpResponse(serializers.serialize('json', bukuKeranjang))
