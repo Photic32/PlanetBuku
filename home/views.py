@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 import datetime
 from django.urls import reverse
@@ -266,6 +267,46 @@ def remove_cart(request):
             id=request.POST.get('id')
             keranjang = Keranjang.objects.filter(user=request.user)
             buku = Book.objects.filter(pk = id)
+            newStockBuku = buku[0].stock + 1
+            buku.update(stock=newStockBuku)
+            keranjang[0].book_list.remove(buku[0])
+            newJumlahKeranjang = keranjang[0].jumlah_buku - 1
+            keranjang.update(jumlah_buku=newJumlahKeranjang)
+
+            return HttpResponse(b"ADDED", status=201)
+        
+    return HttpResponseNotFound()
+
+@csrf_exempt
+def handle_cart_flutter(request):
+    #handle keranjang
+    if request.method =='POST':
+        data = json.loads(request.body)
+        user = data["idUser"]
+        book = data["bookId"]
+        action = data["action"]
+        if action == "Borrow":
+            keranjang = Keranjang.objects.filter(user=user)
+            buku = Book.objects.filter(pk = book)
+            newStockBuku = buku[0].stock - 1
+            buku.update(stock=newStockBuku)
+            keranjang[0].book_list.remove(buku[0])
+            newJumlahKeranjang = keranjang[0].jumlah_buku - 1
+            keranjang.update(jumlah_buku=newJumlahKeranjang)
+            #handle peminjaman
+            newPeminjaman=Peminjaman(pengguna=user, buku=buku[0], status='dipinjam')
+            newPeminjaman.save()
+            temp = Peminjaman.objects.filter(pengguna=user, buku=buku[0], status='dipinjam')
+            #handle peminjam
+            peminjam = Peminjam.objects.filter(user=user)
+            peminjam[0].book_list.add(temp[0])
+            newJumlahPeminjam = peminjam[0].jumlah_buku_dipinjam + 1
+            peminjam.update(jumlah_buku_dipinjam=newJumlahPeminjam)
+        
+            return HttpResponse(b"ADDED", status=201)
+        elif(action == "Remove") :
+            keranjang = Keranjang.objects.filter(user=user)
+            buku = Book.objects.filter(pk = book)
             newStockBuku = buku[0].stock + 1
             buku.update(stock=newStockBuku)
             keranjang[0].book_list.remove(buku[0])
