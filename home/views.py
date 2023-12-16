@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import datetime
 from django.urls import reverse
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import JsonResponse
 from django.urls import reverse
 from book.models import Book
 from view_book.models import Review
@@ -303,7 +303,7 @@ def handle_cart_flutter(request):
             newJumlahPeminjam = peminjam[0].jumlah_buku_dipinjam + 1
             peminjam.update(jumlah_buku_dipinjam=newJumlahPeminjam)
         
-            return HttpResponse(b"ADDED", status=201)
+            return JsonResponse({"status": "success"}, status=200)
         elif(action == "Remove") :
             keranjang = Keranjang.objects.filter(user=user)
             buku = Book.objects.filter(pk = book)
@@ -313,6 +313,6 @@ def handle_cart_flutter(request):
             newJumlahKeranjang = keranjang[0].jumlah_buku - 1
             keranjang.update(jumlah_buku=newJumlahKeranjang)
 
-            return HttpResponse(b"ADDED", status=201)
+            return JsonResponse({"status": "success"}, status=200)
         
-    return HttpResponseNotFound()
+    return JsonResponse({"status": "error"}, status=401)
