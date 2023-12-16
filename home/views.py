@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 import datetime
 from django.urls import reverse
@@ -14,10 +15,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-import datetime
-from django.urls import reverse
-from django.http import HttpResponseRedirect, HttpResponseNotFound
-from django.urls import reverse
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 from book.models import Book
 from view_book.models import Review
 from home.models import Keranjang
@@ -142,6 +141,11 @@ def get_bukuPeminjaman_json(request):
 
 def getBukuKeranjang_json(request):
     keranjang = Keranjang.objects.filter(user=request.user)[0]
+    bukuKeranjang = keranjang.book_list.all()
+    return HttpResponse(serializers.serialize('json', bukuKeranjang))
+
+def getBukuKeranjangFlutter_json(request, id):
+    keranjang = Keranjang.objects.filter(user=id)[0]
     bukuKeranjang = keranjang.book_list.all()
     return HttpResponse(serializers.serialize('json', bukuKeranjang))
 
@@ -270,3 +274,44 @@ def remove_cart(request):
             return HttpResponse(b"ADDED", status=201)
         
     return HttpResponseNotFound()
+
+@csrf_exempt
+def handle_cart_flutter(request):
+    #handle keranjang
+    if request.method =='POST':
+        data = json.loads(request.body)
+        userId = int(data["idUser"])
+        user = User.objects.filter(id = userId)[0]
+        book = int(data["bookId"])
+        action = data["action"]
+        if action == "Borrow":
+            keranjang = Keranjang.objects.filter(user=user)
+            buku = Book.objects.filter(pk = book)
+            newStockBuku = buku[0].stock - 1
+            buku.update(stock=newStockBuku)
+            keranjang[0].book_list.remove(buku[0])
+            newJumlahKeranjang = keranjang[0].jumlah_buku - 1
+            keranjang.update(jumlah_buku=newJumlahKeranjang)
+            #handle peminjaman
+            newPeminjaman=Peminjaman(pengguna=user, buku=buku[0], status='dipinjam')
+            newPeminjaman.save()
+            temp = Peminjaman.objects.filter(pengguna=user, buku=buku[0], status='dipinjam')
+            #handle peminjam
+            peminjam = Peminjam.objects.filter(user=user)
+            peminjam[0].book_list.add(temp[0])
+            newJumlahPeminjam = peminjam[0].jumlah_buku_dipinjam + 1
+            peminjam.update(jumlah_buku_dipinjam=newJumlahPeminjam)
+        
+            return JsonResponse({"status": "success"}, status=200)
+        elif(action == "Remove") :
+            keranjang = Keranjang.objects.filter(user=user)
+            buku = Book.objects.filter(pk = book)
+            newStockBuku = buku[0].stock + 1
+            buku.update(stock=newStockBuku)
+            keranjang[0].book_list.remove(buku[0])
+            newJumlahKeranjang = keranjang[0].jumlah_buku - 1
+            keranjang.update(jumlah_buku=newJumlahKeranjang)
+
+            return JsonResponse({"status": "success"}, status=200)
+        
+    return JsonResponse({"status": "error"}, status=401)
