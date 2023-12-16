@@ -293,9 +293,9 @@ def handle_cart_flutter(request):
             newJumlahKeranjang = keranjang[0].jumlah_buku - 1
             keranjang.update(jumlah_buku=newJumlahKeranjang)
             #handle peminjaman
-            newPeminjaman=Peminjaman(pengguna=user, buku=buku[0], status='dipinjam')
+            newPeminjaman=Peminjaman(pengguna=1, buku=buku[0], status='dipinjam')
             newPeminjaman.save()
-            temp = Peminjaman.objects.filter(pengguna=user, buku=buku[0], status='dipinjam')
+            temp = Peminjaman.objects.filter(pengguna=1, buku=buku[0], status='dipinjam')
             #handle peminjam
             peminjam = Peminjam.objects.filter(user=user)
             peminjam[0].book_list.add(temp[0])
