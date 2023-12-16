@@ -11,4 +11,4 @@ class Review(models.Model):
         validators=[MinValueValidator(0),
                     MaxValueValidator(5)]
         )
-    review_date = models.DateField(auto_now_add=True)
+    review_date = models.DateField(auto_now=True)
