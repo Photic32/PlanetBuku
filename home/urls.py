@@ -18,8 +18,9 @@ urlpatterns = [
     path('submit-cart/', submit_cart, name='submit_cart'),
     path('remove-cart/', remove_cart, name='remove_cart'),
     path('cart/', show_keranjang, name='show_keranjang'),
-    path('get-buku-keranjang', getBukuKeranjang_json, name='getBukuKeranjang_json'),
-    path('get-buku-peminjaman', get_bukuPeminjaman_json, name='get_bukuPeminjaman_json'),
-    path('get-reviews-peminjaman', get_bukuReviews_json, name='get_bukuReviews_json'),
-    path('show-profile', show_profile, name='show_profile'),
+    path('get-buku-keranjang/', getBukuKeranjang_json, name='getBukuKeranjang_json'),
+    path('get-buku-keranjang/<int:id>/', getBukuKeranjang_json, name='getBukuKeranjang_json'),
+    path('get-buku-peminjaman/', get_bukuPeminjaman_json, name='get_bukuPeminjaman_json'),
+    path('get-reviews-peminjaman/', get_bukuReviews_json, name='get_bukuReviews_json'),
+    path('show-profile/', show_profile, name='show_profile'),
 ]

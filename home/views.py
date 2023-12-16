@@ -145,6 +145,11 @@ def getBukuKeranjang_json(request):
     bukuKeranjang = keranjang.book_list.all()
     return HttpResponse(serializers.serialize('json', bukuKeranjang))
 
+def getBukuKeranjangById_json(request, id):
+    keranjang = Keranjang.objects.filter(user=id)[0]
+    bukuKeranjang = keranjang.book_list.all()
+    return HttpResponse(serializers.serialize('json', bukuKeranjang))
+
 def get_book_json(request):
     books = Book.objects.filter(stock__gt=0)
     return HttpResponse(serializers.serialize('json', books))
