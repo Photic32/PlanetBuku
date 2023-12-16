@@ -15,10 +15,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-import datetime
-from django.urls import reverse
+from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.urls import reverse
 from book.models import Book
 from view_book.models import Review
 from home.models import Keranjang
@@ -282,7 +280,8 @@ def handle_cart_flutter(request):
     #handle keranjang
     if request.method =='POST':
         data = json.loads(request.body)
-        user = int(data["idUser"])
+        userId = int(data["idUser"])
+        user = User.objects.filter(pk = userId)
         book = int(data["bookId"])
         action = data["action"]
         if action == "Borrow":
