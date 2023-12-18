@@ -169,7 +169,6 @@ def show_keranjang(request):
     else:                                     
         return render(request,"homeGuest.html")
 
-@login_required(login_url='/register')
 def show_home(request):
     if request.user.is_authenticated:
         user = request.user
