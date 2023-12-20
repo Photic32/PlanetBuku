@@ -4,6 +4,40 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
+import datetime
+from home.models import Keranjang
+from daftar_peminjam.models import Peminjam
+from django.urls import reverse
+
+
+@csrf_exempt
+def register(request):
+    form = UserCreationForm()
+    if request.method == "POST": 
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            newKeranjang = Keranjang(user=user)
+            newKeranjang.save()
+            newPeminjam = Peminjam(user=user)
+            newPeminjam.save()
+            return JsonResponse({
+                "username": user.username,
+                "status": True,
+                "message": "Signup User sukses!",
+                "user_id": user.pk,
+                # Tambahkan data lainnya jika ingin mengirim data ke Flutter.
+            }, status=200)
+        else:
+            return JsonResponse({
+                "status": False,
+                "message": "Signup gagal, mohon cek lagi."
+            }, status=401)
+
 
 @csrf_exempt
 def login(request):
@@ -100,3 +134,4 @@ def tes(request):
         "status": False,
         "message": "Logout gagal."
         }, status=401)
+    
