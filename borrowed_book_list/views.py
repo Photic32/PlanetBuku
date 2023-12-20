@@ -2,11 +2,12 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from borrowed_book_list.models import Peminjaman, KesanPeminjam
 from book.models import Book
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
+from django.contrib.auth.models import User
 
 def borrowed_book_list(request):
     peminjaman_dipinjam = Peminjaman.objects.filter(pengguna=request.user, status =('dipinjam'))
@@ -24,6 +25,16 @@ def borrowed_book_json(request):
     peminjaman_dipinjam = Peminjaman.objects.filter(pengguna=request.user, status =('dipinjam'))
     peminjaman_dikembalikan = Peminjaman.objects.filter(pengguna=request.user, status =('dikembalikan'))
     return HttpResponse(serialize_peminjam_individu(peminjaman_dipinjam, peminjaman_dikembalikan))
+
+def borrowed_book_byid(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    peminjaman_dipinjam = Peminjaman.objects.filter(pengguna=user, status=('dipinjam'))
+    peminjaman_dikembalikan = Peminjaman.objects.filter(pengguna=user, status =('dikembalikan'))
+    serialized_books = serialize_peminjam_individu(peminjaman_dipinjam, peminjaman_dikembalikan)
+    # return HttpResponse(serializers.serialize('json', peminjaman_dipinjam))
+
+    return HttpResponse(serialized_books, content_type='application/json')
+
 
 #peminjam.html
 def serialize_peminjam_individu(peminjaman_dipinjam, peminjaman_dikembalikan):
@@ -69,6 +80,7 @@ def serialize_peminjam_individu(peminjaman_dipinjam, peminjaman_dikembalikan):
             "book_id" : book.pk, 
             "kesan" : kesantext
         }
+        print(kesantext)
         dikembalikan.append(temp2)
 
     return json.dumps({'dipinjam': dipinjam, 'dikembalikan': dikembalikan})
@@ -83,7 +95,8 @@ def return_book(request, book_id):
         peminjaman.status = 'dikembalikan'
         peminjaman.save()
         # return HttpResponse("Book marked as returned successfully.")
-    return HttpResponseRedirect(reverse('borrowed_book_list:borrowed_book_list'))
+    # return HttpResponseRedirect(reverse('borrowed_book_list:borrowed_book_list'))
+    return JsonResponse({"success" : "True"})
 
 @csrf_exempt
 def add_kesan_ajax(request):
@@ -107,5 +120,29 @@ def get_kesan_json(request, id):
     # else:
     #     kesan_peminjam = kesan_peminjam[0]
     return HttpResponse(serializers.serialize('json', kesan_peminjam))
-    
+
+
+@csrf_exempt
+def add_kesan_flutter(request, id):
+    try:
+        data = Book.objects.get(pk=id)
+    except Book.DoesNotExist:
+        return JsonResponse({"status": "error", "message": "Buku tidak ditemukan"}, status=404)
+
+    if request.method == 'POST':
+        try:
+            updated_data = json.loads(request.body)
+
+            data.kesan = updated_data["kesan"]
+            book = get_object_or_404(Book, pk=id)
+
+            new_kesan = KesanPeminjam(book=book, kesan=updated_data['kesan'])
+            new_kesan.save()
+            
+
+            return JsonResponse({"status": "success"}, status=200)
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Format JSON tidak valid"}, status=400)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
 # Create your views here.
